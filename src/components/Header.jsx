@@ -18,6 +18,9 @@ export default function Header() {
           <a href="#projects" className="nav-link">
             Projets
           </a>
+          <a href="#education" className="nav-link">
+            Parcours
+          </a>
           <a href="#experience" className="nav-link">
             Expérience
           </a>
