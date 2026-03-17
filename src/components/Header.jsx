@@ -15,9 +15,6 @@ export default function Header() {
           <a href="#skills" className="nav-link">
             Compétences
           </a>
-          <a href="#academic-skills" className="nav-link">
-            ACCES
-          </a>
           <a href="#projects" className="nav-link">
             Projets
           </a>

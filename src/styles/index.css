@@ -909,6 +909,185 @@ section h2::after {
 }
 
 /* ============================================
+   ACADEMIC SKILLS (EMBEDDED IN EDUCATION)
+   ============================================ */
+
+.academic-skills-embedded {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #0099ff;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.academic-title {
+  color: #0055cc;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.semester-section {
+  margin-bottom: 2rem;
+}
+
+.semester-title {
+  color: #0055cc;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #0099ff;
+  letter-spacing: 0.5px;
+}
+
+.competencies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.competency-card {
+  background-color: #ffffff;
+  border: 3px solid #0055cc;
+  border-radius: 2px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 85, 204, 0.25);
+}
+
+.competency-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 85, 204, 0.35);
+  transform: translateY(-2px);
+}
+
+.competency-header {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #0099ff;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.competency-code {
+  background: linear-gradient(135deg, #0055cc 0%, #0099ff 100%);
+  color: #ffffff;
+  padding: 0.4rem 0.75rem;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+
+.competency-title {
+  color: #1a1a1a;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.competency-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.project-detail {
+  background-color: #f5f5f5;
+  border-left: 4px solid #0099ff;
+  padding: 1rem;
+  border-radius: 2px;
+}
+
+.project-code-name {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.project-code {
+  background-color: #0055cc;
+  color: #ffffff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 2px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.project-name {
+  color: #1a1a1a;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-item label {
+  color: #0055cc;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-item p {
+  color: #555555;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.deliverables-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.deliverables-list li {
+  color: #555555;
+  font-size: 0.9rem;
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.deliverables-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #0099ff;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* ============================================
    EXPERIENCE SECTION
    ============================================ */
 
