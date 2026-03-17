@@ -1,9 +1,9 @@
 export default function Education() {
   const education = [
     {
-      school: "Université de Picardie Jules Verne",
+      school: "IUT du Limousin, Campus de Limoges",
       degree: "BUT Informatique",
-      period: "2023 - 2025 (En cours - Année 2)",
+      period: "2024 - 2027 (En cours - Année 1)",
       description:
         "Formation en apprentissage technique et pratique. Modules couvrant le développement web, bases de données, architecture logicielle et gestion de projet. Projets concrets en équipe incluant la SAÉ Legrand.",
       specialties: [
@@ -17,7 +17,7 @@ export default function Education() {
     {
       school: "Lycée Jean Macé, Niort",
       degree: "Baccalauréat Général",
-      period: "2022",
+      period: "2024",
       description:
         "Formation générale avec spécialisations en Mathématiques, NSI (Numérique et Science de l'Informatique) et Art Plastique. Développement de l'esprit critique, créativité et apprentissage des bases de la programmation.",
       specialties: [
