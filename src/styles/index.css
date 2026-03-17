@@ -711,6 +711,48 @@ section h2::after {
   border: 1px solid var(--primary-light);
 }
 
+/* Interactive education specialties */
+.education-content .degree.clickable {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: var(--transition);
+  user-select: none;
+}
+
+.education-content .degree.clickable:hover {
+  color: var(--primary-light);
+}
+
+.expand-icon {
+  display: inline-block;
+  font-size: 0.7rem;
+  transition: transform 0.3s ease;
+}
+
+.education-content.expanded .expand-icon {
+  transform: rotate(180deg);
+}
+
+.education-specialties {
+  max-height: 500px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.education-specialties.hidden {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}
+
+.education-specialties.visible {
+  max-height: 500px;
+  opacity: 1;
+  margin-top: 1.25rem;
+}
+
 /* ============================================
    EXPERIENCE SECTION
    ============================================ */

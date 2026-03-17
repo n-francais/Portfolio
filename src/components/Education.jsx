@@ -1,9 +1,13 @@
+import { useState } from "react";
+
 export default function Education() {
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
   const education = [
     {
       school: "IUT du Limousin, Campus de Limoges",
       degree: "BUT Informatique",
-      period: "2024 - 2027 (En cours - Année 1)",
+      period: "2024 - 2027 (En cours - Année 2)",
       description:
         "Formation en apprentissage technique et pratique. Modules couvrant le développement web, bases de données, architecture logicielle et gestion de projet. Projets concrets en équipe incluant la SAÉ Legrand.",
       specialties: [
@@ -30,6 +34,10 @@ export default function Education() {
     },
   ];
 
+  const toggleExpand = (idx) => {
+    setExpandedIndex(expandedIndex === idx ? null : idx);
+  };
+
   return (
     <section id="education" className="education">
       <div className="container">
@@ -40,13 +48,27 @@ export default function Education() {
             <div key={idx} className="education-item">
               <div className="education-marker"></div>
 
-              <div className="education-content">
+              <div
+                className={`education-content ${
+                  expandedIndex === idx ? "expanded" : ""
+                }`}
+              >
                 <h3>{edu.school}</h3>
-                <p className="degree">{edu.degree}</p>
+                <p
+                  className="degree clickable"
+                  onClick={() => toggleExpand(idx)}
+                  title="Cliquez pour voir les compétences"
+                >
+                  {edu.degree} <span className="expand-icon">▼</span>
+                </p>
                 <p className="period">{edu.period}</p>
                 <p className="description">{edu.description}</p>
 
-                <div className="education-specialties">
+                <div
+                  className={`education-specialties ${
+                    expandedIndex === idx ? "visible" : "hidden"
+                  }`}
+                >
                   {edu.specialties.map((specialty, i) => (
                     <span key={i} className="specialty-pill">
                       {specialty}
