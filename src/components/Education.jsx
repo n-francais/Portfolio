@@ -15,16 +15,17 @@ export default function Education() {
       ],
     },
     {
-      school: "Lycée",
-      degree: "Baccalauréat Scientifique",
+      school: "Lycée Jean Macé, Niort",
+      degree: "Baccalauréat Général",
       period: "2022",
       description:
-        "Formation générale avec spécialisation en sciences et mathématiques. Base solide en logique algorithmique et résolution de problèmes complexes.",
+        "Formation générale avec spécialisations en Mathématiques, NSI (Numérique et Science de l'Informatique) et Art Plastique. Développement de l'esprit critique, créativité et apprentissage des bases de la programmation.",
       specialties: [
         "Mathématiques",
-        "Sciences physiques",
-        "Logique algorithmique",
-        "Résolution de problèmes",
+        "NSI (Informatique)",
+        "Art Plastique",
+        "Pensée critique",
+        "Créativité",
       ],
     },
   ];
