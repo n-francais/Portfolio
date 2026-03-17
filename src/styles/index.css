@@ -601,6 +601,161 @@ section h2::after {
 }
 
 /* ============================================
+   ACADEMIC SKILLS SECTION
+   ============================================ */
+
+.academic-skills {
+  background-color: transparent;
+}
+
+.semester-section {
+  margin-bottom: 4rem;
+}
+
+.semester-title {
+  color: var(--primary-light);
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--primary-light);
+  letter-spacing: 0.5px;
+}
+
+.competencies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+}
+
+.competency-card {
+  background-color: var(--accent-white);
+  border: 3px solid var(--primary-blue);
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.competency-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary-light);
+}
+
+.competency-header {
+  background: linear-gradient(90deg, rgba(0, 153, 255, 0.1) 0%, transparent 100%);
+  padding: 1.75rem;
+  border-bottom: 2px solid var(--primary-light);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.competency-code {
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 2px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.competency-title {
+  color: var(--text-dark);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.competency-projects {
+  padding: 1.75rem;
+}
+
+.project-detail {
+  margin-bottom: 2rem;
+}
+
+.project-detail:last-child {
+  margin-bottom: 0;
+}
+
+.project-code-name {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.project-code {
+  background-color: var(--primary-light);
+  color: white;
+  padding: 0.35rem 0.7rem;
+  border-radius: 2px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.project-name {
+  color: var(--primary-blue);
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.info-item {
+  border-left: 3px solid var(--primary-light);
+  padding-left: 1rem;
+}
+
+.info-item label {
+  color: var(--primary-blue);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-item p {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.deliverables-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.deliverables-list li {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  position: relative;
+  line-height: 1.6;
+}
+
+.deliverables-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--primary-light);
+  font-weight: 700;
+}
+
+/* ============================================
    EDUCATION SECTION
    ============================================ */
 
@@ -1100,6 +1255,20 @@ section {
     border-width: 2px;
   }
 
+  .competencies-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .competency-card {
+    border-width: 2px;
+  }
+
+  .semester-title {
+    font-size: 1.4rem;
+    margin-bottom: 2rem;
+  }
+
   .education-timeline::before {
     display: none;
   }
@@ -1233,6 +1402,26 @@ section {
 
   .skill-category {
     padding: 1.75rem;
+  }
+
+  .competencies-grid {
+    gap: 1.5rem;
+  }
+
+  .competency-card {
+    border-width: 2px;
+  }
+
+  .competency-header {
+    padding: 1.5rem;
+  }
+
+  .competency-projects {
+    padding: 1.5rem;
+  }
+
+  .semester-title {
+    font-size: 1.2rem;
   }
 
   .projects-list {
@@ -1444,6 +1633,41 @@ section {
   .skill-badge {
     font-size: 0.75rem;
     padding: 0.4rem 0.8rem;
+  }
+
+  .competencies-grid {
+    gap: 1.25rem;
+  }
+
+  .competency-card {
+    border-width: 2px;
+  }
+
+  .competency-code,
+  .project-code {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .competency-title {
+    font-size: 0.95rem;
+  }
+
+  .project-name {
+    font-size: 0.85rem;
+  }
+
+  .info-item label {
+    font-size: 0.8rem;
+  }
+
+  .info-item p {
+    font-size: 0.85rem;
+  }
+
+  .semester-title {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
   }
 
   .projects-list {
