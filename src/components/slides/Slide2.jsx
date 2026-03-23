@@ -43,7 +43,7 @@ export default function Slide2() {
 
           <div className="projects-preview-grid">
             <div className="preview-card">
-              <div className="preview-image">👤</div>
+              <div className="preview-image"></div>
               <h3>BRAND IDENTITY</h3>
               <p>Création d'identité visuelle cohérente</p>
             </div>

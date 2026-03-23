@@ -60,7 +60,7 @@ export default function Projects() {
                 ))}
               </div>
 
-              <p className="project-impact">✓ {project.impact}</p>
+              <p className="project-impact">{project.impact}</p>
             </div>
           ))}
         </div>

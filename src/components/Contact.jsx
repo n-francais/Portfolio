@@ -6,12 +6,12 @@ export default function Contact() {
 
         <div className="contact-boxes">
           <div className="contact-box">
-            <h3>📧 Email</h3>
+            <h3>Email</h3>
             <a href="mailto:ninafran67@gmail.com">ninafran67@gmail.com</a>
           </div>
 
           <div className="contact-box">
-            <h3>💼 LinkedIn</h3>
+            <h3>LinkedIn</h3>
             <a
               href="https://www.linkedin.com/in/nina-français"
               target="_blank"
@@ -22,7 +22,7 @@ export default function Contact() {
           </div>
 
           <div className="contact-box">
-            <h3>💻 GitHub</h3>
+            <h3>GitHub</h3>
             <a
               href="https://github.com/n-francais"
               target="_blank"

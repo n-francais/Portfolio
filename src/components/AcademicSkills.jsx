@@ -1,4 +1,10 @@
-export default function AcademicSkills() {
+import { useState } from "react";
+import Modal from "./Modal";
+
+function AcademicSkills() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCompetency, setSelectedCompetency] = useState(null);
+
   const semesters = [
     {
       semester: "Semestre 1",
@@ -6,6 +12,36 @@ export default function AcademicSkills() {
         {
           code: "C1",
           title: "Réaliser un développement d'application",
+          projects: [
+            {
+              code: "SAÉ 1.01",
+              name: "Implémentation d'un besoin client",
+              description:
+                "Concevoir des minis jeux en Python et implémentation d'algorithmes",
+              personalRole: "Implémentation de toute l'application",
+              deliverables: [
+                "Rapport avec des captures d'écrans des jeux",
+                "Soutenances du projet",
+                "Dossier zip du projet",
+              ],
+            },
+            {
+              code: "SAÉ 1.02",
+              name: "Comparaison d'approches algorithmiques",
+              description:
+                "Étude et comparaison de différentes approches pour résoudre des problèmes algorithmiques",
+              personalRole: "Implémentation de toute l'application",
+              deliverables: [
+                "Rapport avec des captures d'écrans",
+                "Soutenances du projet",
+                "Dossier zip du projet",
+              ],
+            },
+          ],
+        },
+        {
+          code: "C2",
+          title: "Optimiser des applications",
           projects: [
             {
               code: "SAÉ 1.01",
@@ -51,64 +87,158 @@ export default function AcademicSkills() {
             },
           ],
         },
+        {
+          code: "C4",
+          title: "Gérer des données",
+          projects: [
+            {
+              code: "SAÉ 1.04",
+              name: "Création d'une base de données",
+              description:
+                "Création d'une base de données pour une bibliothèque avec extraction des données souhaitées",
+              personalRole: "Rapport détaillé du projet, Création et gestion de la BDD, Analyse des données",
+              deliverables: [
+                "Rapport détaillé du projet avec des captures d'écrans",
+                "Soutenances du projet",
+              ],
+            },
+          ],
+        },
+        {
+          code: "C5",
+          title: "Conduire un projet",
+          projects: [
+            {
+              code: "SAÉ 1.05",
+              name: "Recueil de besoins",
+              description:
+                "Recueil des besoins pour la création d'un gestionnaire de bibliothèque avec présentation des choix techniques",
+              personalRole: "Rapport du projet, Diaporama explicatif, Choix techniques",
+              deliverables: [
+                "Rapport du recueil des besoins",
+                "Soutenance du projet",
+              ],
+            },
+          ],
+        },
+        {
+          code: "C6",
+          title: "Collaborer au sein d'une équipe informatique",
+          projects: [
+            {
+              code: "SAÉ 1.06",
+              name: "Découverte de l'environnement économique et écologique",
+              description:
+                "Interview d'un professionnel et présentation lors d'une soutenance",
+              personalRole: "Interview, Présentation",
+              deliverables: [
+                "Soutenance du projet",
+              ],
+            },
+          ],
+        },
       ],
     },
   ];
 
+  const openModal = (competency) => {
+    setSelectedCompetency(competency);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedCompetency(null);
+  };
+
   return (
-    <section id="academic-skills" className="academic-skills">
-      <div className="container">
-        <h2>Compétences Académiques</h2>
+    <>
+      <section id="academic-skills" className="academic-skills">
+        <div className="container">
+          <h2>Compétences Académiques</h2>
+          <p className="section-subtitle">
+            Cliquez sur une compétence pour voir les détails
+          </p>
 
-        {semesters.map((sem, semIdx) => (
-          <div key={semIdx} className="semester-section">
-            <h3 className="semester-title">{sem.semester}</h3>
+          {semesters.map((sem) => (
+            <div key={sem.semester} className="semester-section">
+              <h3 className="semester-title">{sem.semester}</h3>
 
-            <div className="competencies-grid">
-              {sem.competencies.map((comp, compIdx) => (
-                <div key={compIdx} className="competency-card">
-                  <div className="competency-header">
-                    <span className="competency-code">{comp.code}</span>
-                    <h4 className="competency-title">{comp.title}</h4>
+              <div className="competencies-grid">
+                {sem.competencies.map((comp) => (
+                  <button
+                    key={comp.code}
+                    className="competency-card-button"
+                    onClick={() => openModal(comp)}
+                    type="button"
+                  >
+                    <div className="competency-header">
+                      <span className="competency-code">{comp.code}</span>
+                      <h4 className="competency-title">{comp.title}</h4>
+                    </div>
+
+                    <div className="competency-projects-preview">
+                      <p className="projects-count">
+                        {comp.projects.length}{" "}
+                        {comp.projects.length > 1 ? "projets" : "projet"}
+                      </p>
+                      <p className="click-hint">
+                        Cliquez pour voir les détails
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+button
+      <Modal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        title={
+          selectedCompetency
+            ? `${selectedCompetency.code} - ${selectedCompetency.title}`
+            : ""
+        }
+      >
+        {selectedCompetency && (
+          <div className="modal-academic-content">
+            {selectedCompetency.projects.map((proj) => (
+              <div key={proj.code} className="project-detail-modal">
+                <div className="project-header-modal">
+                  <span className="project-code-modal">{proj.code}</span>
+                  <h4 className="project-name-modal">{proj.name}</h4>
+                </div>
+
+                <div className="project-info-modal">
+                  <div className="info-item-modal">
+                    <div className="info-label">Description:</div>
+                    <p>{proj.description}</p>
                   </div>
 
-                  <div className="competency-projects">
-                    {comp.projects.map((proj, projIdx) => (
-                      <div key={projIdx} className="project-detail">
-                        <div className="project-code-name">
-                          <span className="project-code">{proj.code}</span>
-                          <p className="project-name">{proj.name}</p>
-                        </div>
+                  <div className="info-item-modal">
+                    <div className="info-label">Rôle Personnel:</div>
+                    <p>{proj.personalRole}</p>
+                  </div>
 
-                        <div className="project-info">
-                          <div className="info-item">
-                            <label>Description:</label>
-                            <p>{proj.description}</p>
-                          </div>
-
-                          <div className="info-item">
-                            <label>Rôle Personnel:</label>
-                            <p>{proj.personalRole}</p>
-                          </div>
-
-                          <div className="info-item">
-                            <label>Livrables:</label>
-                            <ul className="deliverables-list">
-                              {proj.deliverables.map((deliverable, idx) => (
-                                <li key={idx}>{deliverable}</li>
-                              ))}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="info-item-modal">
+                    <div className="info-label">Livrables:</div>
+                    <ul className="deliverables-list-modal">
+                      {proj.deliverables.map((deliverable) => (
+                        <li key={deliverable}>{deliverable}</li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </section>
+        )}
+      </Modal>
+    </>
   );
 }
+
+export default AcademicSkills;
