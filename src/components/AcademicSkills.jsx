@@ -206,8 +206,6 @@ function AcademicSkills() {
 
           {semesters.map((sem) => (
             <div key={sem.semester} className="semester-section">
-              <h3 className="semester-title">{sem.semester}</h3>
-
               <div className="competencies-grid">
                 {sem.competencies.map((comp) => (
                   <button

@@ -285,7 +285,6 @@ export default function Education() {
                     <h4 className="academic-title">Compétences Académiques</h4>
                     {semesters.map((sem) => (
                       <div key={sem.semester} className="semester-section">
-                        <h5 className="semester-title">{sem.semester}</h5>
                         <div className="competencies-grid-compact">
                           {sem.competencies.map((comp) => (
                             <button
