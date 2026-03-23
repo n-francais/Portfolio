@@ -37,6 +37,17 @@ function AcademicSkills() {
                 "Dossier zip du projet",
               ],
             },
+            {
+              code: "SAÉ 2.01",
+              name: "Développement d'une application",
+              description:
+                "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
+              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              deliverables: [
+                "Différentes versions du projet",
+                "Soutenances du projet",
+              ],
+            },
           ],
         },
         {
@@ -65,6 +76,17 @@ function AcademicSkills() {
                 "Rapport avec des captures d'écrans",
                 "Soutenances du projet",
                 "Dossier zip du projet",
+              ],
+            },
+            {
+              code: "SAÉ 2.02",
+              name: "Exploration algorithmique d'un problème",
+              description:
+                "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
+              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              deliverables: [
+                "Différentes versions du projet",
+                "Soutenances du projet",
               ],
             },
           ],
@@ -133,6 +155,17 @@ function AcademicSkills() {
               personalRole: "Interview, Présentation",
               deliverables: [
                 "Soutenance du projet",
+              ],
+            },
+            {
+              code: "SAÉ 2.06",
+              name: "Organisation d'un travail d'équipe",
+              description:
+                "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
+              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              deliverables: [
+                "Différentes versions du projet",
+                "Soutenances du projet",
               ],
             },
           ],
