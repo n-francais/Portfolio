@@ -3,7 +3,7 @@ export default function Experience() {
     {
       company: "Lidl",
       position: "Équipière Polyvalente",
-      period: "Plusieurs années",
+      period: "juin 2025 - mars 2026",
       description:
         "Travail en équipe dans un environnement dynamique et exigeant. Responsabilités variées incluant la gestion des rayons, accueil client et gestion des stocks.",
       skills: [
