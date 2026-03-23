@@ -7,7 +7,7 @@ function AcademicSkills() {
 
   const semesters = [
     {
-      semester: "Semestre 1",
+      
       competencies: [
         {
           code: "C1",
