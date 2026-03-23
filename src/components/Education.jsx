@@ -44,7 +44,8 @@ export default function Education() {
               name: "Développement d'une application",
               description:
                 "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
-              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              personalRole:
+                "Création des différentes interfaces, Gestion des événements en front",
               deliverables: [
                 "Différentes versions du projet",
                 "Soutenances du projet",
@@ -85,7 +86,8 @@ export default function Education() {
               name: "Exploration algorithmique d'un problème",
               description:
                 "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
-              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              personalRole:
+                "Création des différentes interfaces, Gestion des événements en front",
               deliverables: [
                 "Différentes versions du projet",
                 "Soutenances du projet",
@@ -107,6 +109,18 @@ export default function Education() {
               deliverables: [
                 "Rapport détaillé du projet avec captures d'écrans",
                 "Soutenance expliquant le processus",
+              ],
+            },
+            {
+              code: "SAÉ 2.03",
+              name: "Installation de services réseau",
+              description:
+                "Création d'un réseau sous Kathara avec implémentation de serveurs DNS, SSH, et DHCP, gestion des adresses IP",
+              personalRole:
+                "Création et installation des différents réseaux, Gestion des adresses",
+              deliverables: [
+                "Rapport et explication du projet",
+                "Soutenance et démonstration du projet",
               ],
             },
           ],
@@ -164,7 +178,8 @@ export default function Education() {
               name: "Organisation d'un travail d'équipe",
               description:
                 "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
-              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              personalRole:
+                "Création des différentes interfaces, Gestion des événements en front",
               deliverables: [
                 "Différentes versions du projet",
                 "Soutenances du projet",

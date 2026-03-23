@@ -107,6 +107,17 @@ function AcademicSkills() {
                 "Soutenance expliquant le processus",
               ],
             },
+            {
+              code: "SAÉ 2.03",
+              name: "Installation de services réseau",
+              description:
+                "Création d'un réseau sous Kathara avec implémentation de serveurs DNS, SSH, et DHCP, gestion des adresses IP",
+              personalRole: "Création et installation des différents réseaux, Gestion des adresses",
+              deliverables: [
+                "Rapport et explication du projet",
+                "Soutenance et démonstration du projet",
+              ],
+            },
           ],
         },
         {
