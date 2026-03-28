@@ -5,13 +5,153 @@ function AcademicSkills() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCompetency, setSelectedCompetency] = useState(null);
 
-  const competencySubSkills = {
-    C1: ["ACE1.01", "ACE1.03", "ACE1.04", "ACE1.06"],
-    C2: ["ACE2.01", "ACE2.02", "ACE2.03", "ACE2.04"],
-    C3: ["ACE3.01", "ACE3.03", "ACE3.02", "ACE3.04"],
-    C4: ["ACE4.01", "ACE4.02", "ACE4.03", "ACE4.05"],
-    C5: ["ACE5.04", "ACE5.02", "ACE5.01", "ACE5.03"],
-    C6: ["ACE6.01", "ACE6.02", "ACE6.03", "ACE6.04"],
+  const competencyDetails = {
+    C1: {
+      title: "Réaliser",
+      shortDescription:
+        "Développer — c'est-à-dire concevoir, coder, tester et intégrer — une solution informatique pour un client.",
+      elements: [
+        {
+          code: "CE1.01",
+          description: "en respectant les besoins décrits par le client",
+        },
+        {
+          code: "CE1.03",
+          description: "en appliquant les principes algorithmiques",
+        },
+        {
+          code: "CE1.04",
+          description: "en veillant à la qualité du code et à sa documentation",
+        },
+        {
+          code: "CE1.06",
+          description: "en choisissant les ressources techniques appropriées",
+        },
+      ],
+    },
+    C2: {
+      title: "Optimiser",
+      shortDescription:
+        "Proposer des applications informatiques optimisées en fonction de critères spécifiques : temps d'exécution, précision, consommation de ressources.",
+      elements: [
+        {
+          code: "CE2.01",
+          description: "en formalisant et modélisant des situations complexes",
+        },
+        {
+          code: "CE2.02",
+          description:
+            "en recensant les algorithmes et les structures de données usuels",
+        },
+        {
+          code: "CE2.03",
+          description: "en s'appuyant sur des schémas de raisonnement",
+        },
+        {
+          code: "CE2.04",
+          description: "en justifiant les choix et validant les résultats",
+        },
+      ],
+    },
+    C3: {
+      title: "Administrer",
+      shortDescription:
+        "Installer, configurer, mettre à disposition, maintenir en conditions opérationnelles des infrastructures, des services et des réseaux et optimiser le système informatique d'une organisation.",
+      elements: [
+        {
+          code: "CE3.01",
+          description: "en sécurisant le système d'information",
+        },
+        {
+          code: "CE3.03",
+          description:
+            "en appliquant les normes en vigueur et les bonnes pratiques architecturales et de sécurité",
+        },
+        {
+          code: "CE3.02",
+          description: "en offrant une qualité de service optimale",
+        },
+        { code: "CE3.04", description: "en assurant la continuité d'activité" },
+      ],
+    },
+    C4: {
+      title: "Gérer",
+      shortDescription:
+        "Concevoir, gérer, administrer et exploiter les données de l'entreprise et mettre à disposition toutes les informations pour un bon pilotage de l'entreprise.",
+      elements: [
+        {
+          code: "CE4.01",
+          description:
+            "en respectant les réglementations sur le respect de la vie privée et la protection des données personnelles",
+        },
+        {
+          code: "CE4.02",
+          description:
+            "en respectant les enjeux économiques, sociétaux et écologiques de l'utilisation du stockage de données, ainsi que les différentes infrastructures (data centers, cloud, etc.)",
+        },
+        {
+          code: "CE4.03",
+          description: "en s'appuyant sur des bases mathématiques",
+        },
+        {
+          code: "CE4.05",
+          description: "en assurant la cohérence et la qualité",
+        },
+      ],
+    },
+    C5: {
+      title: "Conduire",
+      shortDescription:
+        "Satisfaire les besoins des utilisateurs au regard de la chaîne de valeur du client, organiser et piloter un projet informatique avec des méthodes classiques ou agiles.",
+      elements: [
+        {
+          code: "CE5.04",
+          description:
+            "en adoptant une démarche proactive, créative et critique",
+        },
+        {
+          code: "CE5.02",
+          description:
+            "en respectant les règles juridiques et les normes en vigueur",
+        },
+        {
+          code: "CE5.01",
+          description:
+            "en communiquant efficacement avec les différents acteurs d'un projet",
+        },
+        {
+          code: "CE5.03",
+          description:
+            "en sensibilisant à une gestion éthique, responsable, durable et interculturelle",
+        },
+      ],
+    },
+    C6: {
+      title: "Collaborer",
+      shortDescription:
+        "Acquérir, développer et exploiter les aptitudes nécessaires pour travailler efficacement dans une équipe informatique.",
+      elements: [
+        {
+          code: "CE6.01",
+          description:
+            "en inscrivant sa démarche au sein d'une équipe pluridisciplinaire",
+        },
+        {
+          code: "CE6.02",
+          description:
+            "en accompagnant la mise en œuvre des évolutions informatiques",
+        },
+        {
+          code: "CE6.03",
+          description: "en veillant au respect des contraintes juridiques",
+        },
+        {
+          code: "CE6.04",
+          description:
+            "en développant une communication efficace et collaborative",
+        },
+      ],
+    },
   };
 
   const competencyDescriptions = {
@@ -21,6 +161,140 @@ function AcademicSkills() {
     C4: "Compétence à concevoir, créer et gérer des bases de données, et à analyser les données de manière efficace.",
     C5: "Capacité à planifier, organiser et diriger un projet informatique du début à la fin.",
     C6: "Aptitude à travailler efficacement en équipe, à communiquer et à collaborer avec d'autres développeurs et professionnels.",
+  };
+
+  const competencySubSkillsDetailed = {
+    C1: [
+      {
+        code: "ACE1.01",
+        description:
+          "Réaliser un développement d'application en respectant les besoins décrits par le client",
+      },
+      {
+        code: "ACE1.03",
+        description:
+          "Réaliser un développement d'application en appliquant les principes algorithmiques",
+      },
+      {
+        code: "ACE1.04",
+        description:
+          "Réaliser un développement d'application en veillant à la qualité du code et à sa documentation",
+      },
+      {
+        code: "ACE1.06",
+        description:
+          "Réaliser un développement d'application en choisissant les ressources techniques appropriées",
+      },
+    ],
+    C2: [
+      {
+        code: "ACE2.01",
+        description:
+          "Optimiser des applications en formalisant et modélisant des situations complexes",
+      },
+      {
+        code: "ACE2.02",
+        description:
+          "Optimiser des applications en recensant les algorithmes et les structures de données usuels",
+      },
+      {
+        code: "ACE2.03",
+        description:
+          "Optimiser des applications en s'appuyant sur des schémas de raisonnement",
+      },
+      {
+        code: "ACE2.04",
+        description:
+          "Optimiser des applications en justifiant les choix et validant les résultats",
+      },
+    ],
+    C3: [
+      {
+        code: "ACE3.01",
+        description:
+          "Administrer des systèmes en sécurisant le système d'information",
+      },
+      {
+        code: "ACE3.03",
+        description:
+          "Administrer des systèmes en appliquant les normes en vigueur et les bonnes pratiques architecturales et de sécurité",
+      },
+      {
+        code: "ACE3.02",
+        description:
+          "Administrer des systèmes en offrant une qualité de service optimale",
+      },
+      {
+        code: "ACE3.04",
+        description:
+          "Administrer des systèmes en assurant la continuité d'activité",
+      },
+    ],
+    C4: [
+      {
+        code: "ACE4.01",
+        description:
+          "Gérer des données en respectant les réglementations sur le respect de la vie privée et la protection des données personnelles",
+      },
+      {
+        code: "ACE4.02",
+        description:
+          "Gérer des données en respectant les enjeux économiques, sociétaux et écologiques de l'utilisation du stockage de données, ainsi que les différentes infrastructures (data centers, cloud, etc.)",
+      },
+      {
+        code: "ACE4.03",
+        description:
+          "Gérer des données en s'appuyant sur des bases mathématiques",
+      },
+      {
+        code: "ACE4.05",
+        description: "Gérer des données en assurant la cohérence et la qualité",
+      },
+    ],
+    C5: [
+      {
+        code: "ACE5.04",
+        description:
+          "Conduire un projet en adoptant une démarche proactive, créative et critique",
+      },
+      {
+        code: "ACE5.02",
+        description:
+          "Conduire un projet en respectant les règles juridiques et les normes en vigueur",
+      },
+      {
+        code: "ACE5.01",
+        description:
+          "Conduire un projet en communiquant efficacement avec les différents acteurs d'un projet",
+      },
+      {
+        code: "ACE5.03",
+        description:
+          "Conduire un projet en sensibilisant à une gestion éthique, responsable, durable et interculturelle",
+      },
+    ],
+    C6: [
+      {
+        code: "ACE6.01",
+        description:
+          "Collaborer au sein d'une équipe informatique en inscrivant sa démarche au sein d'une équipe pluridisciplinaire",
+      },
+      {
+        code: "ACE6.02",
+        description:
+          "Collaborer au sein d'une équipe informatique en accompagnant la mise en œuvre des évolutions informatiques",
+      },
+      {
+        code: "ACE6.03",
+        description:
+          "Collaborer au sein d'une équipe informatique en veillant au respect des contraintes juridiques",
+      },
+      {
+        code: "ACE6.04",
+        description:
+          "Collaborer au sein d'une équipe informatique en développant une communication efficace et collaborative",
+      },
+    ],
   };
 
   const semesters = [
@@ -312,9 +586,14 @@ function AcademicSkills() {
                       <div className="info-label">Sous-compétences (ACE):</div>
                       <ul className="deliverables-list-modal">
                         {(
-                          competencySubSkills[selectedCompetency.code] || []
+                          competencySubSkillsDetailed[
+                            selectedCompetency.code
+                          ] || []
                         ).map((subSkill) => (
-                          <li key={subSkill}>{subSkill}</li>
+                          <li key={subSkill.code}>
+                            <strong>{subSkill.code}</strong> —{" "}
+                            {subSkill.description}
+                          </li>
                         ))}
                       </ul>
                     </div>
