@@ -7,6 +7,15 @@ export default function Education() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCompetency, setSelectedCompetency] = useState(null);
 
+  const competencySubSkills = {
+    C1: ["ACE1.01", "ACE1.03", "ACE1.04", "ACE1.06"],
+    C2: ["ACE2.01", "ACE2.02", "ACE2.03", "ACE2.04"],
+    C3: ["ACE3.01", "ACE3.03", "ACE3.02", "ACE3.04"],
+    C4: ["ACE4.01", "ACE4.02", "ACE4.03", "ACE4.05"],
+    C5: ["ACE5.04", "ACE5.02", "ACE5.01", "ACE5.03"],
+    C6: ["ACE6.01", "ACE6.02", "ACE6.03", "ACE6.04"],
+  };
+
   const semesters = [
     {
       semester: "Semestre 1",
@@ -345,6 +354,17 @@ export default function Education() {
                       <ul className="deliverables-list-modal">
                         {proj.deliverables.map((deliverable) => (
                           <li key={deliverable}>{deliverable}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="info-item-modal">
+                      <div className="info-label">Sous-compétences (ACE):</div>
+                      <ul className="deliverables-list-modal">
+                        {(
+                          competencySubSkills[selectedCompetency.code] || []
+                        ).map((subSkill) => (
+                          <li key={subSkill}>{subSkill}</li>
                         ))}
                       </ul>
                     </div>

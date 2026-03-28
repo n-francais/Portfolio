@@ -5,9 +5,26 @@ function AcademicSkills() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCompetency, setSelectedCompetency] = useState(null);
 
+  const competencySubSkills = {
+    C1: ["ACE1.01", "ACE1.03", "ACE1.04", "ACE1.06"],
+    C2: ["ACE2.01", "ACE2.02", "ACE2.03", "ACE2.04"],
+    C3: ["ACE3.01", "ACE3.03", "ACE3.02", "ACE3.04"],
+    C4: ["ACE4.01", "ACE4.02", "ACE4.03", "ACE4.05"],
+    C5: ["ACE5.04", "ACE5.02", "ACE5.01", "ACE5.03"],
+    C6: ["ACE6.01", "ACE6.02", "ACE6.03", "ACE6.04"],
+  };
+
+  const competencyDescriptions = {
+    C1: "Capacité à concevoir, développer et implémenter des applications informatiques en répondant aux besoins spécifiques des clients.",
+    C2: "Compétence à analyser les performances d'une application et à mettre en œuvre des optimisations pour améliorer son efficacité.",
+    C3: "Aptitude à installer, configurer et maintenir des systèmes informatiques, ainsi que à gérer les machines virtuelles et environnements.",
+    C4: "Compétence à concevoir, créer et gérer des bases de données, et à analyser les données de manière efficace.",
+    C5: "Capacité à planifier, organiser et diriger un projet informatique du début à la fin.",
+    C6: "Aptitude à travailler efficacement en équipe, à communiquer et à collaborer avec d'autres développeurs et professionnels.",
+  };
+
   const semesters = [
     {
-      
       competencies: [
         {
           code: "C1",
@@ -42,7 +59,8 @@ function AcademicSkills() {
               name: "Développement d'une application",
               description:
                 "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
-              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              personalRole:
+                "Création des différentes interfaces, Gestion des événements en front",
               deliverables: [
                 "Différentes versions du projet",
                 "Soutenances du projet",
@@ -83,7 +101,8 @@ function AcademicSkills() {
               name: "Exploration algorithmique d'un problème",
               description:
                 "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
-              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              personalRole:
+                "Création des différentes interfaces, Gestion des événements en front",
               deliverables: [
                 "Différentes versions du projet",
                 "Soutenances du projet",
@@ -112,7 +131,8 @@ function AcademicSkills() {
               name: "Installation de services réseau",
               description:
                 "Création d'un réseau sous Kathara avec implémentation de serveurs DNS, SSH, et DHCP, gestion des adresses IP",
-              personalRole: "Création et installation des différents réseaux, Gestion des adresses",
+              personalRole:
+                "Création et installation des différents réseaux, Gestion des adresses",
               deliverables: [
                 "Rapport et explication du projet",
                 "Soutenance et démonstration du projet",
@@ -129,7 +149,8 @@ function AcademicSkills() {
               name: "Création d'une base de données",
               description:
                 "Création d'une base de données pour une bibliothèque avec extraction des données souhaitées",
-              personalRole: "Rapport détaillé du projet, Création et gestion de la BDD, Analyse des données",
+              personalRole:
+                "Rapport détaillé du projet, Création et gestion de la BDD, Analyse des données",
               deliverables: [
                 "Rapport détaillé du projet avec des captures d'écrans",
                 "Soutenances du projet",
@@ -146,7 +167,8 @@ function AcademicSkills() {
               name: "Recueil de besoins",
               description:
                 "Recueil des besoins pour la création d'un gestionnaire de bibliothèque avec présentation des choix techniques",
-              personalRole: "Rapport du projet, Diaporama explicatif, Choix techniques",
+              personalRole:
+                "Rapport du projet, Diaporama explicatif, Choix techniques",
               deliverables: [
                 "Rapport du recueil des besoins",
                 "Soutenance du projet",
@@ -164,16 +186,15 @@ function AcademicSkills() {
               description:
                 "Interview d'un professionnel et présentation lors d'une soutenance",
               personalRole: "Interview, Présentation",
-              deliverables: [
-                "Soutenance du projet",
-              ],
+              deliverables: ["Soutenance du projet"],
             },
             {
               code: "SAÉ 2.06",
               name: "Organisation d'un travail d'équipe",
               description:
                 "Conception du jeu Latice en Java et JavaFX avec création d'une interface sur Scene Builder pour le JavaFX, création du jeu en console Java et gestion des événements",
-              personalRole: "Création des différentes interfaces, Gestion des événements en front",
+              personalRole:
+                "Création des différentes interfaces, Gestion des événements en front",
               deliverables: [
                 "Différentes versions du projet",
                 "Soutenances du projet",
@@ -228,14 +249,14 @@ function AcademicSkills() {
                         Cliquez pour voir les détails
                       </p>
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
           ))}
         </div>
       </section>
-button
+
       <Modal
         isOpen={isModalOpen}
         onClose={closeModal}
@@ -247,35 +268,60 @@ button
       >
         {selectedCompetency && (
           <div className="modal-academic-content">
-            {selectedCompetency.projects.map((proj) => (
-              <div key={proj.code} className="project-detail-modal">
-                <div className="project-header-modal">
-                  <span className="project-code-modal">{proj.code}</span>
-                  <h4 className="project-name-modal">{proj.name}</h4>
+            <div className="competency-description-modal">
+              <p>
+                <strong>Description:</strong>
+              </p>
+              <p>{competencyDescriptions[selectedCompetency.code]}</p>
+            </div>
+
+            <hr style={{ margin: "20px 0" }} />
+
+            <div className="projects-section-modal">
+              <p>
+                <strong>Projets associés:</strong>
+              </p>
+              {selectedCompetency.projects.map((proj) => (
+                <div key={proj.code} className="project-detail-modal">
+                  <div className="project-header-modal">
+                    <span className="project-code-modal">{proj.code}</span>
+                    <h4 className="project-name-modal">{proj.name}</h4>
+                  </div>
+
+                  <div className="project-info-modal">
+                    <div className="info-item-modal">
+                      <div className="info-label">Description:</div>
+                      <p>{proj.description}</p>
+                    </div>
+
+                    <div className="info-item-modal">
+                      <div className="info-label">Rôle Personnel:</div>
+                      <p>{proj.personalRole}</p>
+                    </div>
+
+                    <div className="info-item-modal">
+                      <div className="info-label">Livrables:</div>
+                      <ul className="deliverables-list-modal">
+                        {proj.deliverables.map((deliverable) => (
+                          <li key={deliverable}>{deliverable}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="info-item-modal">
+                      <div className="info-label">Sous-compétences (ACE):</div>
+                      <ul className="deliverables-list-modal">
+                        {(
+                          competencySubSkills[selectedCompetency.code] || []
+                        ).map((subSkill) => (
+                          <li key={subSkill}>{subSkill}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="project-info-modal">
-                  <div className="info-item-modal">
-                    <div className="info-label">Description:</div>
-                    <p>{proj.description}</p>
-                  </div>
-
-                  <div className="info-item-modal">
-                    <div className="info-label">Rôle Personnel:</div>
-                    <p>{proj.personalRole}</p>
-                  </div>
-
-                  <div className="info-item-modal">
-                    <div className="info-label">Livrables:</div>
-                    <ul className="deliverables-list-modal">
-                      {proj.deliverables.map((deliverable) => (
-                        <li key={deliverable}>{deliverable}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
       </Modal>
