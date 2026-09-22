@@ -164,10 +164,14 @@ p{margin:0 0 1em}
     50%{box-shadow:var(--panel-shadow),0 0 0 8px color-mix(in srgb,var(--pine) 0%,transparent)}
   }
 }
-/* ---------- Carte mentale d'accueil (grande, colorée) ---------- */
-.empty-state{align-items:center;text-align:center;padding:3.5rem clamp(1.5rem,4vw,3rem)}
-.empty-state .lead{max-width:none}
-.mindmap--hero{max-width:32rem;margin-top:1rem}
+/* ---------- Écran d'accueil : carte mentale plein écran ---------- */
+.landing{
+  position:relative;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:2rem;text-align:center;
+  padding:2rem;max-width:none
+}
+.landing .lead{max-width:28em}
+.mindmap--hero{max-width:36rem}
 .mindmap--hero .mindmap-lines line{
   stroke:color-mix(in srgb,var(--c) 55%,var(--panel-border));stroke-width:1
 }
