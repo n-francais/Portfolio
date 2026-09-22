@@ -5,18 +5,32 @@ import Program from "./components/Program";
 import Parcours from "./components/Parcours";
 import HorsCode from "./components/HorsCode";
 import Contact from "./components/Contact";
+import useHashRoute from "./hooks/useHashRoute";
+
+const SECTIONS = {
+  apropos: About,
+  projets: Projects,
+  competences: Program,
+  parcours: Parcours,
+  horscode: HorsCode,
+  contact: Contact,
+};
 
 function App() {
+  const active = useHashRoute();
+  const ActiveSection = active ? SECTIONS[active] : null;
+
   return (
     <div className="shell">
-      <Sidebar />
+      <Sidebar active={active} />
       <main className="main">
-        <About />
-        <Projects />
-        <Program />
-        <Parcours />
-        <HorsCode />
-        <Contact />
+        {ActiveSection ? (
+          <ActiveSection />
+        ) : (
+          <section className="empty-state">
+            <p className="lead">Clique sur un élément de la carte pour explorer mon profil.</p>
+          </section>
+        )}
       </main>
     </div>
   );
