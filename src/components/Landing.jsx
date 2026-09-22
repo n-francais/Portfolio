@@ -7,7 +7,7 @@ export default function Landing() {
     <div className="landing">
       <ThemeToggle />
       <p className="lead">Clique sur un élément de la carte pour explorer mon profil.</p>
-      <MindMapNav items={navItems} variant="hero" hubLabel="Nina Français" />
+      <MindMapNav items={navItems} />
     </div>
   );
 }
