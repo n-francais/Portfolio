@@ -1,4 +1,3 @@
-import useActiveSection from "../hooks/useActiveSection";
 import ThemeToggle from "./ThemeToggle";
 import MindMapNav from "./MindMapNav";
 
@@ -11,9 +10,7 @@ const NAV_ITEMS = [
   { id: "contact", label: "Contact", short: "Contact" },
 ];
 
-export default function Sidebar() {
-  const activeId = useActiveSection(NAV_ITEMS.map((item) => item.id));
-
+export default function Sidebar({ active }) {
   return (
     <aside className="side">
       <ThemeToggle />
@@ -35,7 +32,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <MindMapNav items={NAV_ITEMS} activeId={activeId} />
+      <MindMapNav items={NAV_ITEMS} activeId={active} />
 
       <div className="contact">
         <a href="mailto:ninafran67@gmail.com">ninafran67@gmail.com</a>
