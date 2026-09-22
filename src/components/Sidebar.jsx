@@ -1,14 +1,6 @@
 import ThemeToggle from "./ThemeToggle";
 import MindMapNav from "./MindMapNav";
-
-const NAV_ITEMS = [
-  { id: "apropos", label: "À propos", short: "À propos" },
-  { id: "projets", label: "Projets", short: "Projets" },
-  { id: "competences", label: "Programme et compétences", short: "Compétences" },
-  { id: "parcours", label: "Parcours", short: "Parcours" },
-  { id: "horscode", label: "Hors code", short: "Hors code" },
-  { id: "contact", label: "Contact", short: "Contact" },
-];
+import navItems from "../data/navItems";
 
 export default function Sidebar({ active }) {
   return (
@@ -32,7 +24,7 @@ export default function Sidebar({ active }) {
         </div>
       </div>
 
-      <MindMapNav items={NAV_ITEMS} activeId={active} />
+      <MindMapNav items={navItems} activeId={active} />
 
       <div className="contact">
         <a href="mailto:ninafran67@gmail.com">ninafran67@gmail.com</a>
