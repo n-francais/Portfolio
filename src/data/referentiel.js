@@ -61,8 +61,9 @@ const referentiel = [
           {
             code: "AC21.04",
             label: "Vérifier et valider la qualité de l'application par les tests",
-            status: "todo",
-            evidence: "À documenter",
+            status: "done",
+            evidence:
+              "Jeu Latice (Java/JavaFX, équipe de 5) : tests unitaires avec suivi de la couverture de code à chaque version livrée, jusqu'à 74 %.",
           },
         ],
       },
@@ -146,8 +147,9 @@ const referentiel = [
           {
             code: "AC22.03",
             label: "Comprendre les enjeux et moyens de sécurisation des données et du code",
-            status: "todo",
-            evidence: "À documenter",
+            status: "done",
+            evidence:
+              "TP de cryptographie en Python : chiffrement/déchiffrement de Vigenère et cryptanalyse de Kasiski.",
           },
           {
             code: "AC22.04",
@@ -177,8 +179,9 @@ const referentiel = [
             code: "AC32.03",
             label:
               "Choisir et utiliser des bibliothèques et méthodes dédiées au domaine d'application (imagerie, immersion, IA, jeux vidéo, parallélisme, calcul formel…)",
-            status: "todo",
-            evidence: "À documenter",
+            status: "done",
+            evidence:
+              "Jeu de plateau Latice : moteur en Java, interface JavaFX (équipe de 5, architecture en packages et contrôleurs dédiés).",
           },
         ],
       },
@@ -343,8 +346,9 @@ const referentiel = [
           {
             code: "AC25.03",
             label: "Identifier les critères de faisabilité d'un projet informatique",
-            status: "todo",
-            evidence: "À documenter",
+            status: "done",
+            evidence:
+              "Cahier des charges d'une application de gestion de bibliothèque universitaire (équipe de 3) : contraintes, risques, priorisation MoSCoW et estimation budgétaire.",
           },
           {
             code: "AC25.04",

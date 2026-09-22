@@ -46,6 +46,7 @@ export default function Sidebar() {
 
       <div className="contact">
         <a href="mailto:ninafran67@gmail.com">ninafran67@gmail.com</a>
+        <a href="tel:+33699119604">+33 6 99 11 96 04</a>
         <a href="https://www.linkedin.com/in/nina-fran%C3%A7ais" target="_blank" rel="noopener">
           LinkedIn
         </a>

@@ -17,7 +17,7 @@ const semesters = [
   {
     code: "S6",
     text: "SAÉ : faire évoluer une application existante, maintenance applicative",
-    note: "Stage final",
+    note: "En alternance chez Legrand",
   },
 ];
 
