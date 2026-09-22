@@ -1,48 +1,27 @@
 export default function About() {
   return (
-    <section id="about" className="about">
-      <div className="container">
-        <h2>À propos</h2>
-        <div className="about-content">
-          <div className="about-text">
-            <p>
-              Je suis Nina Français, développeuse frontend passionnée par les
-              interfaces utilisateur intuitives et performantes. Actuellement en
-              deuxième année de BUT Informatique, je construis mes compétences à
-              travers des projets concrets et exigeants.
-            </p>
-            <p>
-              Récemment, lors d'un projet académique nous avons travaillé avec{" "}
-              <strong>Legrand</strong>, où nous avons réaliser en équipe de 5
-                une application permettant d'éditer et consulter des
-              modes opératoires en atelier. J'ai notamment approfondi mes
-              compétences en <strong>Vue.js & TypeScript</strong>, maîtrisé les
-              interactions <strong>frontend/backend</strong>, et contribué à l'
-              <strong>architecture globale</strong> du projet.
-            </p>
-            <p>
-              Rigoureuse, curieuse et investie, je suis à la recherche d'une{" "}
-              <strong>alternance en développement frontend</strong> au sein
-              d'une équipe dynamique. À moyen terme, je souhaite évoluer vers la{" "}
-              <strong>gestion de projet</strong> pour combiner ma passion
-              technique avec une vision stratégique et coordinatrice.
-            </p>
-          </div>
-          <div className="about-stats">
-            <div className="stat-item">
-              <div className="stat-number">2+</div>
-              <div className="stat-label">Années d'études IT</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">12+</div>
-              <div className="stat-label">Langages/Outils</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">5</div>
-              <div className="stat-label">Membres équipe Legrand</div>
-            </div>
-          </div>
-        </div>
+    <section id="apropos">
+      <h2>À propos</h2>
+      <p className="lead">
+        Je conçois des applications web de bout en bout : l'API, l'interface, la base de
+        données, et le déploiement qui les met en ligne.
+      </p>
+      <div className="prose">
+        <p>
+          Je suis en 3<sup>e</sup> année du BUT Informatique de l'IUT du Limousin, dans le
+          parcours <strong>Réalisation d'applications : conception, développement, validation</strong>.
+          Ce parcours forme à concevoir des applications complexes, à les tester, à automatiser
+          ces tests et à les intégrer en continu. C'est exactement ce que j'ai pratiqué chez
+          Legrand : d'abord en stage puis en CDD, sur un outil de monitoring pour le logiciel
+          XLPro4 Tableaux, et depuis septembre 2026 en alternance, où je développe des API pour
+          le back-office et le front-office.
+        </p>
+        <p>
+          En parallèle des cours, j'ai été équipière chez Lidl pendant près d'un an et
+          vice-présidente du bureau des étudiants de ma formation. J'ai appris à tenir un
+          rythme, à parler aux gens et à m'organiser. Pour la suite, je veux devenir ingénieure
+          en génie logiciel, en alternant école et entreprise.
+        </p>
       </div>
     </section>
   );

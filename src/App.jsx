@@ -1,25 +1,23 @@
-import Header from "./components/Header";
-import Hero from "./components/Hero";
+import Sidebar from "./components/Sidebar";
 import About from "./components/About";
-import Skills from "./components/Skills";
 import Projects from "./components/Projects";
-import Education from "./components/Education";
-import Experience from "./components/Experience";
+import Program from "./components/Program";
+import Parcours from "./components/Parcours";
+import HorsCode from "./components/HorsCode";
 import Contact from "./components/Contact";
-import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="app">
-      <Header />
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Education />
-      <Experience />
-      <Contact />
-      <Footer />
+    <div className="shell">
+      <Sidebar />
+      <main className="main">
+        <About />
+        <Projects />
+        <Program />
+        <Parcours />
+        <HorsCode />
+        <Contact />
+      </main>
     </div>
   );
 }
