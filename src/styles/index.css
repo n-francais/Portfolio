@@ -125,15 +125,44 @@ p{margin:0 0 1em}
 }
 .status::before{content:"";flex:none;width:.6rem;height:.6rem;border-radius:50%;background:var(--brass);margin-top:.4rem;box-shadow:0 0 0 4px color-mix(in srgb,var(--brass) 25%,transparent)}
 .status strong{display:block}
-.side nav ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
-.side nav a{
-  display:block;padding:.55rem .9rem;color:var(--ink);text-decoration:none;font-weight:600;
-  border-radius:999px;transition:background .25s ease,box-shadow .25s ease,transform .2s ease
+/* ---------- Navigation en carte mentale ---------- */
+.mindmap{
+  position:relative;width:100%;max-width:15.5rem;aspect-ratio:1/1;margin:0 auto;
 }
-.side nav a:hover{background:color-mix(in srgb,var(--panel-bg) 70%,transparent);transform:translateX(2px)}
-.side nav a[aria-current="true"]{
-  background:var(--panel-bg-strong);-webkit-backdrop-filter:blur(var(--blur));backdrop-filter:blur(var(--blur));
-  box-shadow:var(--panel-shadow-sm);border:1px solid var(--panel-border)
+.mindmap-lines{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.mindmap-lines line{
+  stroke:var(--panel-border);stroke-width:.6;vector-effect:non-scaling-stroke;
+  transition:stroke .3s ease,stroke-width .3s ease
+}
+.mindmap-lines line.active{
+  stroke:var(--pine);stroke-width:1.1;stroke-dasharray:3 2;
+}
+@media (prefers-reduced-motion: no-preference){
+  .mindmap-lines line.active{animation:mindmap-flow 1.6s linear infinite}
+  @keyframes mindmap-flow{to{stroke-dashoffset:-20}}
+}
+.mindmap-hub,.mindmap-node{
+  position:absolute;transform:translate(-50%,-50%);
+  display:grid;place-items:center;text-align:center;
+  border-radius:50%;text-decoration:none;color:var(--ink);font-weight:700;
+  background:var(--panel-bg);-webkit-backdrop-filter:blur(var(--blur));backdrop-filter:blur(var(--blur));
+  border:1px solid var(--panel-border);box-shadow:var(--panel-shadow-sm);
+  transition:transform .25s ease,box-shadow .25s ease,background .25s ease
+}
+.mindmap-hub{left:50%;top:50%;width:3.1rem;height:3.1rem;font-size:.8rem;background:var(--panel-bg-strong)}
+.mindmap-node{width:4.5rem;height:4.5rem;font-size:.68rem;line-height:1.15;padding:.3rem}
+.mindmap-node:hover{transform:translate(-50%,-50%) translateY(-3px);box-shadow:var(--panel-shadow)}
+.mindmap-node[aria-current="true"]{
+  background:color-mix(in srgb,var(--pine) 28%,var(--panel-bg-strong));
+  border-color:color-mix(in srgb,var(--pine) 45%,var(--panel-border));
+  color:var(--ink);box-shadow:var(--panel-shadow)
+}
+@media (prefers-reduced-motion: no-preference){
+  .mindmap-node[aria-current="true"]{animation:mindmap-pulse 2.4s ease-in-out infinite}
+  @keyframes mindmap-pulse{
+    0%,100%{box-shadow:var(--panel-shadow),0 0 0 0 color-mix(in srgb,var(--pine) 35%,transparent)}
+    50%{box-shadow:var(--panel-shadow),0 0 0 8px color-mix(in srgb,var(--pine) 0%,transparent)}
+  }
 }
 .contact{margin-top:auto;display:grid;gap:.4rem;font-size:.95rem;min-width:0}
 .contact a{color:var(--ink);font-weight:500;overflow-wrap:anywhere}
