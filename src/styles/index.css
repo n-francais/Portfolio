@@ -92,8 +92,14 @@ p{margin:0 0 1em}
 .name{
   font-family:var(--display);font-weight:800;font-size:clamp(2.4rem,4.4vw,3.8rem);
   line-height:1.02;letter-spacing:-.02em;margin:0;overflow-wrap:break-word;
-  background:linear-gradient(135deg,var(--ink) 30%,var(--pine) 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent
+  color:var(--ink)
+}
+@supports (background-clip:text) or (-webkit-background-clip:text){
+  .name{
+    background:linear-gradient(135deg,var(--ink) 30%,var(--pine) 100%);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;-webkit-text-fill-color:transparent
+  }
 }
 .name span{display:block}
 @media (prefers-reduced-motion: no-preference){
