@@ -1,13 +1,14 @@
 import useActiveSection from "../hooks/useActiveSection";
 import ThemeToggle from "./ThemeToggle";
+import MindMapNav from "./MindMapNav";
 
 const NAV_ITEMS = [
-  { id: "apropos", label: "À propos" },
-  { id: "projets", label: "Projets" },
-  { id: "competences", label: "Programme et compétences" },
-  { id: "parcours", label: "Parcours" },
-  { id: "horscode", label: "Hors code" },
-  { id: "contact", label: "Contact" },
+  { id: "apropos", label: "À propos", short: "À propos" },
+  { id: "projets", label: "Projets", short: "Projets" },
+  { id: "competences", label: "Programme et compétences", short: "Compétences" },
+  { id: "parcours", label: "Parcours", short: "Parcours" },
+  { id: "horscode", label: "Hors code", short: "Hors code" },
+  { id: "contact", label: "Contact", short: "Contact" },
 ];
 
 export default function Sidebar() {
@@ -34,17 +35,7 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <nav aria-label="Sections">
-        <ul>
-          {NAV_ITEMS.map((item) => (
-            <li key={item.id}>
-              <a href={`#${item.id}`} aria-current={activeId === item.id || undefined}>
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <MindMapNav items={NAV_ITEMS} activeId={activeId} />
 
       <div className="contact">
         <a href="mailto:ninafran67@gmail.com">ninafran67@gmail.com</a>
