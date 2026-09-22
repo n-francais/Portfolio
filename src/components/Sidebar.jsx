@@ -1,4 +1,5 @@
 import useActiveSection from "../hooks/useActiveSection";
+import ThemeToggle from "./ThemeToggle";
 
 const NAV_ITEMS = [
   { id: "apropos", label: "À propos" },
@@ -14,6 +15,7 @@ export default function Sidebar() {
 
   return (
     <aside className="side">
+      <ThemeToggle />
       <div>
         <h1 className="name">
           <span>Nina</span>
