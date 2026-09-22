@@ -164,6 +164,32 @@ p{margin:0 0 1em}
     50%{box-shadow:var(--panel-shadow),0 0 0 8px color-mix(in srgb,var(--pine) 0%,transparent)}
   }
 }
+/* ---------- Carte mentale d'accueil (grande, colorée) ---------- */
+.empty-state{align-items:center;text-align:center;padding:3.5rem clamp(1.5rem,4vw,3rem)}
+.empty-state .lead{max-width:none}
+.mindmap--hero{max-width:32rem;margin-top:1rem}
+.mindmap--hero .mindmap-lines line{
+  stroke:color-mix(in srgb,var(--c) 55%,var(--panel-border));stroke-width:1
+}
+.mindmap--hero .mindmap-hub{
+  width:9rem;height:9rem;font-size:1.15rem;font-weight:800;padding:.5rem;
+  background:color-mix(in srgb,var(--pine) 55%,var(--panel-bg-strong));
+  border-color:color-mix(in srgb,var(--pine) 65%,var(--panel-border));
+  color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.35)
+}
+.mindmap--hero .mindmap-node{
+  width:8rem;height:8rem;font-size:.95rem;font-weight:800;padding:.4rem;
+  background:color-mix(in srgb,var(--c) 62%,var(--panel-bg-strong));
+  border-color:color-mix(in srgb,var(--c) 72%,var(--panel-border));
+  color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.35)
+}
+.mindmap--hero .mindmap-node:hover{transform:translate(-50%,-50%) scale(1.06)}
+@media (max-width: 860px){
+  .mindmap--hero{max-width:18rem}
+  .mindmap--hero .mindmap-hub{width:5.5rem;height:5.5rem;font-size:.8rem}
+  .mindmap--hero .mindmap-node{width:5rem;height:5rem;font-size:.7rem}
+}
+
 .contact{margin-top:auto;display:grid;gap:.4rem;font-size:.95rem;min-width:0}
 .contact a{color:var(--ink);font-weight:500;overflow-wrap:anywhere}
 

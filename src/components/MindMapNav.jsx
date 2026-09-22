@@ -9,11 +9,11 @@ function nodePosition(index, count) {
   };
 }
 
-export default function MindMapNav({ items, activeId }) {
+export default function MindMapNav({ items, activeId, variant = "sidebar", hubLabel = "NF" }) {
   const nodes = items.map((item, i) => ({ ...item, ...nodePosition(i, items.length) }));
 
   return (
-    <nav className="mindmap" aria-label="Sections">
+    <nav className={`mindmap mindmap--${variant}`} aria-label="Sections">
       <svg viewBox="0 0 100 100" className="mindmap-lines" aria-hidden="true">
         {nodes.map((n) => (
           <line
@@ -23,12 +23,13 @@ export default function MindMapNav({ items, activeId }) {
             x2={n.x}
             y2={n.y}
             className={activeId === n.id ? "active" : ""}
+            style={{ "--c": n.color }}
           />
         ))}
       </svg>
 
       <a href="#apropos" className="mindmap-hub" aria-label="Aller en haut de page">
-        NF
+        {hubLabel}
       </a>
 
       {nodes.map((n) => (
@@ -36,7 +37,7 @@ export default function MindMapNav({ items, activeId }) {
           key={n.id}
           href={`#${n.id}`}
           className="mindmap-node"
-          style={{ left: `${n.x}%`, top: `${n.y}%` }}
+          style={{ left: `${n.x}%`, top: `${n.y}%`, "--c": n.color }}
           aria-current={activeId === n.id || undefined}
           title={n.label}
         >

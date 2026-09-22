@@ -5,6 +5,8 @@ import Program from "./components/Program";
 import Parcours from "./components/Parcours";
 import HorsCode from "./components/HorsCode";
 import Contact from "./components/Contact";
+import MindMapNav from "./components/MindMapNav";
+import navItems from "./data/navItems";
 import useHashRoute from "./hooks/useHashRoute";
 
 const SECTIONS = {
@@ -29,6 +31,7 @@ function App() {
         ) : (
           <section className="empty-state">
             <p className="lead">Clique sur un élément de la carte pour explorer mon profil.</p>
+            <MindMapNav items={navItems} activeId={active} variant="hero" hubLabel="Nina Français" />
           </section>
         )}
       </main>
