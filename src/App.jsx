@@ -1,5 +1,5 @@
-import Sidebar from "./components/Sidebar";
 import Landing from "./components/Landing";
+import ThemeToggle from "./components/ThemeToggle";
 import About from "./components/About";
 import Projects from "./components/Projects";
 import Program from "./components/Program";
@@ -26,8 +26,11 @@ function App() {
   }
 
   return (
-    <div className="shell">
-      <Sidebar active={active} />
+    <div className="page">
+      <ThemeToggle />
+      <a href="#" className="back-link">
+        ← Carte mentale
+      </a>
       <main className="main">
         <ActiveSection />
       </main>

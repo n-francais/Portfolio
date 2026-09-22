@@ -2,6 +2,16 @@ export default function About() {
   return (
     <section id="apropos">
       <h2>À propos</h2>
+      <p className="role">
+        Développeuse full-stack en alternance chez Legrand, 3<sup>e</sup> année de BUT
+        Informatique à l'IUT du Limousin
+      </p>
+      <div className="status">
+        <div>
+          <strong>Rentrée 2027</strong>
+          Je cherche une école d'ingénieur en apprentissage pour poursuivre après mon BUT.
+        </div>
+      </div>
       <p className="lead">
         Je conçois des applications web de bout en bout : l'API, l'interface, la base de
         données, et le déploiement qui les met en ligne.

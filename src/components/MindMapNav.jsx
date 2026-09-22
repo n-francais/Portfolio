@@ -9,11 +9,11 @@ function nodePosition(index, count) {
   };
 }
 
-export default function MindMapNav({ items, activeId, variant = "sidebar", hubLabel = "NF" }) {
+export default function MindMapNav({ items, activeId }) {
   const nodes = items.map((item, i) => ({ ...item, ...nodePosition(i, items.length) }));
 
   return (
-    <nav className={`mindmap mindmap--${variant}`} aria-label="Sections">
+    <nav className="mindmap" aria-label="Sections">
       <svg viewBox="0 0 100 100" className="mindmap-lines" aria-hidden="true">
         {nodes.map((n) => (
           <line
@@ -28,8 +28,8 @@ export default function MindMapNav({ items, activeId, variant = "sidebar", hubLa
         ))}
       </svg>
 
-      <a href="#apropos" className="mindmap-hub" aria-label="Aller en haut de page">
-        {hubLabel}
+      <a href="#apropos" className="mindmap-hub" aria-label="Aller à la section À propos">
+        Nina Français
       </a>
 
       {nodes.map((n) => (
