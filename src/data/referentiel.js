@@ -21,11 +21,24 @@ const referentiel = [
       {
         title: "Développer des applications informatiques simples",
         acs: [
-          { code: "AC11.01", label: "Implémenter des conceptions simples" },
-          { code: "AC11.02", label: "Élaborer des conceptions simples" },
+          {
+            code: "AC11.01",
+            label: "Implémenter des conceptions simples",
+            status: "done",
+            evidence: "Mini-jeux développés en Python lors des cours d'algorithmique (SAÉ).",
+          },
+          {
+            code: "AC11.02",
+            label: "Élaborer des conceptions simples",
+            status: "done",
+            evidence:
+              "Conception des mini-jeux Python à partir des concepts algorithmiques de base vus en cours.",
+          },
           {
             code: "AC11.03",
             label: "Faire des essais et évaluer leurs résultats en regard des spécifications",
+            status: "done",
+            evidence: "SAÉ en bash sur les fondamentaux bas niveau, avec vérification des résultats obtenus.",
           },
           {
             code: "AC11.04",
@@ -49,8 +62,8 @@ const referentiel = [
           {
             code: "AC21.02",
             label: "Appliquer des principes d'accessibilité et d'ergonomie",
-            status: "todo",
-            evidence: "À documenter",
+            status: "done",
+            evidence: "Respect des maquettes fournies par Legrand pour l'ergonomie et la stabilité des interfaces.",
           },
           {
             code: "AC21.03",
@@ -80,7 +93,8 @@ const referentiel = [
             code: "AC31.02",
             label: "Faire évoluer une application existante",
             status: "todo",
-            evidence: "À documenter",
+            evidence:
+              "En cours : accompagnement de l'évolution des API existantes de Legrand pendant l'alternance.",
           },
           {
             code: "AC31.03",
@@ -212,7 +226,12 @@ const referentiel = [
           { code: "AC13.01", label: "Identifier les différents composants (matériels et logiciels) d'un système numérique" },
           { code: "AC13.02", label: "Utiliser les fonctionnalités de base d'un système multitâches / multiutilisateurs" },
           { code: "AC13.03", label: "Installer et configurer un système d'exploitation et des outils de développement" },
-          { code: "AC13.04", label: "Configurer un poste de travail dans un réseau d'entreprise" },
+          {
+            code: "AC13.04",
+            label: "Configurer un poste de travail dans un réseau d'entreprise",
+            status: "done",
+            evidence: "Plusieurs projets réseau en IPv4 et IPv6 (adressage, configuration).",
+          },
         ],
       },
       {
@@ -265,9 +284,21 @@ const referentiel = [
           {
             code: "AC14.01",
             label: "Mettre à jour et interroger une base de données relationnelle (en requêtes directes ou à travers une application)",
+            status: "done",
+            evidence: "Requêtes et mises à jour sur bases relationnelles (PostgreSQL, SQL Server) dans plusieurs projets.",
           },
-          { code: "AC14.02", label: "Visualiser des données" },
-          { code: "AC14.03", label: "Concevoir une base de données relationnelle à partir d'un cahier des charges" },
+          {
+            code: "AC14.02",
+            label: "Visualiser des données",
+            status: "done",
+            evidence: "Visualisation des données de supervision via un tableau de bord Flutter (XLPro4).",
+          },
+          {
+            code: "AC14.03",
+            label: "Concevoir une base de données relationnelle à partir d'un cahier des charges",
+            status: "done",
+            evidence: "Conception de bases de données relationnelles pour plusieurs projets (bibliothèque universitaire, modes opératoires Legrand).",
+          },
         ],
       },
       {
@@ -282,8 +313,9 @@ const referentiel = [
           {
             code: "AC24.02",
             label: "Assurer la sécurité des données (intégrité et confidentialité)",
-            status: "todo",
-            evidence: "À documenter",
+            status: "done",
+            evidence:
+              "Principes de chiffrement et de cryptographie (TP Vigenère/Kasiski en Python) appliqués à la protection des données.",
           },
           {
             code: "AC24.03",
@@ -323,9 +355,24 @@ const referentiel = [
       {
         title: "Identifier les besoins métiers des clients et des utilisateurs",
         acs: [
-          { code: "AC15.01", label: "Appréhender les besoins du client et de l'utilisateur" },
-          { code: "AC15.02", label: "Mettre en place les outils de gestion de projet" },
-          { code: "AC15.03", label: "Identifier les acteurs et les différentes phases d'un cycle de développement" },
+          {
+            code: "AC15.01",
+            label: "Appréhender les besoins du client et de l'utilisateur",
+            status: "done",
+            evidence: "Échanges avec les équipes Legrand pour comprendre leurs besoins sur le projet de modes opératoires.",
+          },
+          {
+            code: "AC15.02",
+            label: "Mettre en place les outils de gestion de projet",
+            status: "done",
+            evidence: "Azure DevOps pour la gestion de projet (backlog, pipelines) sur les projets Legrand et IUT.",
+          },
+          {
+            code: "AC15.03",
+            label: "Identifier les acteurs et les différentes phases d'un cycle de développement",
+            status: "done",
+            evidence: "Cycle de développement complet vécu à travers plusieurs SAÉ, du recueil du besoin au déploiement.",
+          },
         ],
       },
       {
