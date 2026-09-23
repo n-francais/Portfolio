@@ -21,11 +21,24 @@ const referentiel = [
       {
         title: "Développer des applications informatiques simples",
         acs: [
-          { code: "AC11.01", label: "Implémenter des conceptions simples" },
-          { code: "AC11.02", label: "Élaborer des conceptions simples" },
+          {
+            code: "AC11.01",
+            label: "Implémenter des conceptions simples",
+            status: "done",
+            evidence: "Mini-jeux développés en Python lors des cours d'algorithmique (SAÉ).",
+          },
+          {
+            code: "AC11.02",
+            label: "Élaborer des conceptions simples",
+            status: "done",
+            evidence:
+              "Conception des mini-jeux Python à partir des concepts algorithmiques de base vus en cours.",
+          },
           {
             code: "AC11.03",
             label: "Faire des essais et évaluer leurs résultats en regard des spécifications",
+            status: "done",
+            evidence: "SAÉ en bash sur les fondamentaux bas niveau, avec vérification des résultats obtenus.",
           },
           {
             code: "AC11.04",
@@ -49,8 +62,8 @@ const referentiel = [
           {
             code: "AC21.02",
             label: "Appliquer des principes d'accessibilité et d'ergonomie",
-            status: "todo",
-            evidence: "À documenter",
+            status: "done",
+            evidence: "Respect des maquettes fournies par Legrand pour l'ergonomie et la stabilité des interfaces.",
           },
           {
             code: "AC21.03",
@@ -80,7 +93,8 @@ const referentiel = [
             code: "AC31.02",
             label: "Faire évoluer une application existante",
             status: "todo",
-            evidence: "À documenter",
+            evidence:
+              "En cours : accompagnement de l'évolution des API existantes de Legrand pendant l'alternance.",
           },
           {
             code: "AC31.03",
