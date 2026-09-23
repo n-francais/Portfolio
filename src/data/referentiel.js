@@ -355,9 +355,24 @@ const referentiel = [
       {
         title: "Identifier les besoins métiers des clients et des utilisateurs",
         acs: [
-          { code: "AC15.01", label: "Appréhender les besoins du client et de l'utilisateur" },
-          { code: "AC15.02", label: "Mettre en place les outils de gestion de projet" },
-          { code: "AC15.03", label: "Identifier les acteurs et les différentes phases d'un cycle de développement" },
+          {
+            code: "AC15.01",
+            label: "Appréhender les besoins du client et de l'utilisateur",
+            status: "done",
+            evidence: "Échanges avec les équipes Legrand pour comprendre leurs besoins sur le projet de modes opératoires.",
+          },
+          {
+            code: "AC15.02",
+            label: "Mettre en place les outils de gestion de projet",
+            status: "done",
+            evidence: "Azure DevOps pour la gestion de projet (backlog, pipelines) sur les projets Legrand et IUT.",
+          },
+          {
+            code: "AC15.03",
+            label: "Identifier les acteurs et les différentes phases d'un cycle de développement",
+            status: "done",
+            evidence: "Cycle de développement complet vécu à travers plusieurs SAÉ, du recueil du besoin au déploiement.",
+          },
         ],
       },
       {
