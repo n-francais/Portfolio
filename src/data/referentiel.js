@@ -226,7 +226,12 @@ const referentiel = [
           { code: "AC13.01", label: "Identifier les différents composants (matériels et logiciels) d'un système numérique" },
           { code: "AC13.02", label: "Utiliser les fonctionnalités de base d'un système multitâches / multiutilisateurs" },
           { code: "AC13.03", label: "Installer et configurer un système d'exploitation et des outils de développement" },
-          { code: "AC13.04", label: "Configurer un poste de travail dans un réseau d'entreprise" },
+          {
+            code: "AC13.04",
+            label: "Configurer un poste de travail dans un réseau d'entreprise",
+            status: "done",
+            evidence: "Plusieurs projets réseau en IPv4 et IPv6 (adressage, configuration).",
+          },
         ],
       },
       {
@@ -279,9 +284,21 @@ const referentiel = [
           {
             code: "AC14.01",
             label: "Mettre à jour et interroger une base de données relationnelle (en requêtes directes ou à travers une application)",
+            status: "done",
+            evidence: "Requêtes et mises à jour sur bases relationnelles (PostgreSQL, SQL Server) dans plusieurs projets.",
           },
-          { code: "AC14.02", label: "Visualiser des données" },
-          { code: "AC14.03", label: "Concevoir une base de données relationnelle à partir d'un cahier des charges" },
+          {
+            code: "AC14.02",
+            label: "Visualiser des données",
+            status: "done",
+            evidence: "Visualisation des données de supervision via un tableau de bord Flutter (XLPro4).",
+          },
+          {
+            code: "AC14.03",
+            label: "Concevoir une base de données relationnelle à partir d'un cahier des charges",
+            status: "done",
+            evidence: "Conception de bases de données relationnelles pour plusieurs projets (bibliothèque universitaire, modes opératoires Legrand).",
+          },
         ],
       },
       {
@@ -296,8 +313,9 @@ const referentiel = [
           {
             code: "AC24.02",
             label: "Assurer la sécurité des données (intégrité et confidentialité)",
-            status: "todo",
-            evidence: "À documenter",
+            status: "done",
+            evidence:
+              "Principes de chiffrement et de cryptographie (TP Vigenère/Kasiski en Python) appliqués à la protection des données.",
           },
           {
             code: "AC24.03",
