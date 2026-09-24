@@ -13,6 +13,11 @@
   --blob-3:rgba(255,196,224,.40);
   --blob-4:rgba(201,187,255,.40);
 
+  --node-blue:#5B9BD5;
+  --node-teal:#4F9E88;
+  --node-rose:#C97B9C;
+  --node-lavender:#8C7AC4;
+
   --panel-bg:rgba(255,255,255,.55);
   --panel-bg-strong:rgba(255,255,255,.72);
   --panel-border:rgba(255,255,255,.65);
@@ -38,6 +43,8 @@
     --blob-3:rgba(210,90,160,.24);
     --blob-4:rgba(140,110,230,.28);
 
+    --node-blue:#6FA8DC; --node-teal:#5FBFA0; --node-rose:#E0A0C0; --node-lavender:#A99AE0;
+
     --panel-bg:rgba(32,34,40,.55);
     --panel-bg-strong:rgba(32,34,40,.72);
     --panel-border:rgba(255,255,255,.12);
@@ -53,6 +60,7 @@
   --blob-2:rgba(70,170,140,.32);
   --blob-3:rgba(210,90,160,.24);
   --blob-4:rgba(140,110,230,.28);
+  --node-blue:#6FA8DC; --node-teal:#5FBFA0; --node-rose:#E0A0C0; --node-lavender:#A99AE0;
   --panel-bg:rgba(32,34,40,.55);
   --panel-bg-strong:rgba(32,34,40,.72);
   --panel-border:rgba(255,255,255,.12);
@@ -123,20 +131,20 @@ p{margin:0 0 1em}
 .mindmap-hub,.mindmap-node{
   position:absolute;transform:translate(-50%,-50%);
   display:grid;place-items:center;text-align:center;
-  border-radius:50%;text-decoration:none;font-weight:800;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.35);
-  -webkit-backdrop-filter:blur(var(--blur));backdrop-filter:blur(var(--blur));
+  border-radius:50%;text-decoration:none;font-weight:800;color:var(--ink);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(180%);backdrop-filter:blur(var(--blur)) saturate(180%);
   border:1px solid var(--panel-border);box-shadow:var(--panel-shadow-sm);
   transition:transform .25s ease,box-shadow .25s ease,background .25s ease
 }
 .mindmap-hub{
   left:50%;top:50%;width:9rem;height:9rem;font-size:1.15rem;padding:.5rem;
-  background:color-mix(in srgb,var(--pine) 55%,var(--panel-bg-strong));
-  border-color:color-mix(in srgb,var(--pine) 65%,var(--panel-border))
+  background:color-mix(in srgb,var(--pine) 40%,var(--panel-bg));
+  border-color:color-mix(in srgb,var(--pine) 55%,var(--panel-border))
 }
 .mindmap-node{
   width:8rem;height:8rem;font-size:.95rem;padding:.4rem;
-  background:color-mix(in srgb,var(--c) 62%,var(--panel-bg-strong));
-  border-color:color-mix(in srgb,var(--c) 72%,var(--panel-border))
+  background:color-mix(in srgb,var(--c) 40%,var(--panel-bg));
+  border-color:color-mix(in srgb,var(--c) 55%,var(--panel-border))
 }
 .mindmap-node:hover{transform:translate(-50%,-50%) scale(1.06);box-shadow:var(--panel-shadow)}
 @media (prefers-reduced-motion: no-preference){
