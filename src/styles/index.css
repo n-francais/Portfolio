@@ -153,6 +153,23 @@ p{margin:0 0 1em}
     0%,100%{box-shadow:var(--panel-shadow),0 0 0 0 color-mix(in srgb,var(--pine) 35%,transparent)}
     50%{box-shadow:var(--panel-shadow),0 0 0 8px color-mix(in srgb,var(--pine) 0%,transparent)}
   }
+
+  /* Zoom d'entrée au clic sur un nœud */
+  .mindmap-hub.zoom,.mindmap-node.zoom{
+    z-index:5;animation:none;
+    transform:translate(-50%,-50%) scale(6);
+    box-shadow:none;
+    transition:transform .42s cubic-bezier(.3,.6,.2,1),opacity .22s ease .2s;
+  }
+  .mindmap.is-zooming .mindmap-hub:not(.zoom),
+  .mindmap.is-zooming .mindmap-node:not(.zoom),
+  .mindmap.is-zooming .mindmap-lines{
+    opacity:0;transition:opacity .25s ease
+  }
+  .mindmap.is-zooming .mindmap-hub.zoom,
+  .mindmap.is-zooming .mindmap-node.zoom{
+    opacity:0
+  }
 }
 @media (max-width: 860px){
   .mindmap{max-width:18rem}
