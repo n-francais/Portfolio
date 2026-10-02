@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import referentiel from "../data/referentiel";
+import ProgressRing, { competencyProgress } from "./ProgressRing";
 
 export default function ReferentialTabs() {
   const [activeId, setActiveId] = useState(referentiel[0].id);
@@ -32,8 +33,11 @@ export default function ReferentialTabs() {
             onClick={() => setActiveId(comp.id)}
             onKeyDown={(e) => handleKeyDown(e, index)}
           >
-            <span>{comp.title}</span>
-            <small>{comp.level}</small>
+            <ProgressRing pct={competencyProgress(comp).pct} />
+            <span className="ref-tab-text">
+              <span>{comp.title}</span>
+              <small>{comp.level}</small>
+            </span>
           </button>
         ))}
       </div>

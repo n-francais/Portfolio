@@ -1,6 +1,9 @@
 import projects from "../data/projects";
+import useTilt from "../hooks/useTilt";
 
 export default function Projects() {
+  const tilt = useTilt();
+
   return (
     <section id="projets">
       <h2>Projets</h2>
@@ -9,6 +12,8 @@ export default function Projects() {
         <article
           key={project.title}
           className={`project${project.featured ? " feature" : ""}`}
+          onMouseMove={tilt.onMouseMove}
+          onMouseLeave={tilt.onMouseLeave}
         >
           <div className="p-meta">
             <b>{project.org}</b>

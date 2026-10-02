@@ -1,6 +1,9 @@
 import Footer from "./Footer";
+import useMagnetic from "../hooks/useMagnetic";
 
 export default function Contact() {
+  const magnet = useMagnetic();
+
   return (
     <section id="contact">
       <div className="cta">
@@ -10,7 +13,12 @@ export default function Contact() {
           Écrivez-moi, je vous réponds rapidement.
         </p>
         <div className="btns">
-          <a className="btn" href="mailto:ninafran67@gmail.com">
+          <a
+            className="btn magnetic"
+            href="mailto:ninafran67@gmail.com"
+            onMouseMove={magnet.onMouseMove}
+            onMouseLeave={magnet.onMouseLeave}
+          >
             M'écrire
           </a>
           <a
