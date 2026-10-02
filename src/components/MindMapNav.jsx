@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const CENTER = 50;
 const RADIUS = 38;
-const ZOOM_MS = 420;
+const GLIDE_MS = 480;
 
 function nodePosition(index, count) {
   const angle = (-90 + index * (360 / count)) * (Math.PI / 180);
@@ -13,20 +13,20 @@ function nodePosition(index, count) {
 }
 
 export default function MindMapNav({ items, activeId }) {
-  const [zoomingId, setZoomingId] = useState(null);
+  const [leavingId, setLeavingId] = useState(null);
   const nodes = items.map((item, i) => ({ ...item, ...nodePosition(i, items.length) }));
 
   const handleClick = (e, id) => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     e.preventDefault();
-    setZoomingId(id);
+    setLeavingId(id);
     setTimeout(() => {
       window.location.hash = id;
-    }, ZOOM_MS);
+    }, GLIDE_MS);
   };
 
   return (
-    <nav className={`mindmap${zoomingId ? " is-zooming" : ""}`} aria-label="Sections">
+    <nav className={`mindmap${leavingId ? " is-leaving" : ""}`} aria-label="Sections">
       <svg viewBox="0 0 100 100" className="mindmap-lines" aria-hidden="true">
         {nodes.map((n) => (
           <line
@@ -43,7 +43,7 @@ export default function MindMapNav({ items, activeId }) {
 
       <a
         href="#apropos"
-        className={`mindmap-hub${zoomingId === "apropos" ? " zoom" : ""}`}
+        className={`mindmap-hub${leavingId === "apropos" ? " leaving" : ""}`}
         aria-label="Aller à la section À propos"
         onClick={(e) => handleClick(e, "apropos")}
       >
@@ -54,7 +54,7 @@ export default function MindMapNav({ items, activeId }) {
         <a
           key={n.id}
           href={`#${n.id}`}
-          className={`mindmap-node${zoomingId === n.id ? " zoom" : ""}`}
+          className={`mindmap-node${leavingId === n.id ? " leaving" : ""}`}
           style={{ left: `${n.x}%`, top: `${n.y}%`, "--c": n.color }}
           aria-current={activeId === n.id || undefined}
           title={n.label}

@@ -181,22 +181,20 @@ p{margin:0 0 1em}
     50%{box-shadow:var(--panel-shadow),0 0 0 8px color-mix(in srgb,var(--pine) 0%,transparent)}
   }
 
-  /* Zoom d'entrée au clic sur un nœud */
-  .mindmap-hub.zoom,.mindmap-node.zoom{
+  /* Glissement au clic sur un nœud : le nœud choisi s'élève et s'efface,
+     les autres s'enfoncent légèrement et s'effacent — pas d'agrandissement */
+  .mindmap-hub.leaving,.mindmap-node.leaving{
     z-index:5;animation:none;
-    transform:translate(-50%,-50%) scale(6);
-    box-shadow:none;
-    transition:transform .42s cubic-bezier(.3,.6,.2,1),opacity .22s ease .2s;
+    transform:translate(-50%,-50%) translateY(-1.75rem) scale(1.04);
+    opacity:0;
+    transition:transform .5s cubic-bezier(.16,1,.3,1),opacity .4s ease .08s;
   }
-  .mindmap.is-zooming .mindmap-hub:not(.zoom),
-  .mindmap.is-zooming .mindmap-node:not(.zoom),
-  .mindmap.is-zooming .mindmap-lines{
-    opacity:0;transition:opacity .25s ease
+  .mindmap.is-leaving .mindmap-hub:not(.leaving),
+  .mindmap.is-leaving .mindmap-node:not(.leaving){
+    opacity:0;transform:translate(-50%,-50%) translateY(1rem) scale(.94);
+    transition:opacity .4s ease,transform .4s cubic-bezier(.16,1,.3,1)
   }
-  .mindmap.is-zooming .mindmap-hub.zoom,
-  .mindmap.is-zooming .mindmap-node.zoom{
-    opacity:0
-  }
+  .mindmap.is-leaving .mindmap-lines{opacity:0;transition:opacity .3s ease}
 }
 @media (max-width: 860px){
   .mindmap{max-width:18rem}
