@@ -429,13 +429,25 @@ const referentiel = [
       {
         title: "Identifier ses aptitudes pour travailler dans une équipe",
         acs: [
-          { code: "AC16.01", label: "Appréhender l'écosystème numérique" },
+          {
+            code: "AC16.01",
+            label: "Appréhender l'écosystème numérique",
+            status: "done",
+            evidence: "Immersion dans l'écosystème informatique de Legrand (stage, CDD, puis alternance).",
+          },
           { code: "AC16.02", label: "Découvrir les aptitudes requises selon les différents secteurs informatiques" },
           {
             code: "AC16.03",
             label: "Identifier les statuts, les fonctions et les rôles de chaque membre d'une équipe pluridisciplinaire",
+            status: "done",
+            evidence: "Collaboration avec développeurs, chefs de projet et équipes métier au sein de Legrand.",
           },
-          { code: "AC16.04", label: "Acquérir les compétences interpersonnelles pour travailler en équipe" },
+          {
+            code: "AC16.04",
+            label: "Acquérir les compétences interpersonnelles pour travailler en équipe",
+            status: "done",
+            evidence: "Travail quotidien en équipe chez Legrand, en stage, CDD puis alternance.",
+          },
         ],
       },
       {
@@ -444,6 +456,8 @@ const referentiel = [
           {
             code: "AC26.01",
             label: "Comprendre la diversité, la structure et la dimension de l'informatique dans une organisation (ESN, DSI…)",
+            status: "done",
+            evidence: "Découverte de l'organisation informatique d'un grand groupe industriel (Legrand) : équipes, outils, processus.",
           },
           {
             code: "AC26.02",
@@ -457,7 +471,12 @@ const referentiel = [
             status: "done",
             evidence: "Projet à cinq pour Legrand ; un an en équipe chez Lidl.",
           },
-          { code: "AC26.04", label: "Rendre compte de son activité professionnelle" },
+          {
+            code: "AC26.04",
+            label: "Rendre compte de son activité professionnelle",
+            status: "done",
+            evidence: "Points d'avancement réguliers avec l'équipe et le tuteur pendant l'alternance chez Legrand.",
+          },
         ],
       },
       {
