@@ -23,17 +23,20 @@ const projects = [
       "Interface web en Flutter pour visualiser l'état des services.",
       "Modélisation et stockage des données de supervision dans PostgreSQL.",
       "Projet mené en autonomie, du recueil du besoin à la livraison.",
+      "Démarré lors du stage de fin de 2e année (API qui monitore les API de front office), évalué par un rapport de stage et une soutenance.",
     ],
     tags: ["NestJS", "TypeScript", "Flutter", "PostgreSQL"],
     featured: false,
   },
   {
     org: "Legrand × IUT",
-    meta: ["Projet académique", "Équipe de cinq"],
+    meta: ["Projet académique · SAÉ 3 et 4", "Équipe de cinq"],
     title: "Application de modes opératoires pour les ateliers",
     context:
-      "Une application web pour rédiger et consulter les modes opératoires utilisés dans les ateliers de production de Legrand.",
+      "Une application web pour rédiger et consulter les modes opératoires utilisés dans les ateliers de production de Legrand, afin de passer d'un système manuel à un outil automatisé.",
     bullets: [
+      "Semestre 3 : mise en place de l'architecture, du backlog sur Azure DevOps et de la maquette Figma, puis début du développement avec les composants Vue.js (lecture et édition, insertion d'images et de texte).",
+      "Semestre 4 : poursuite du développement et ajout d'une zone de dessin pour insérer des formes et annoter l'image et l'étape.",
       "Front en Vue.js et TypeScript, API Node.js, base SQL Server.",
       "Déploiement sur Azure : infrastructure décrite avec Terraform, conteneurs Docker, pipelines Azure DevOps.",
       "Organisation en sprints avec Scrum.",
@@ -87,6 +90,30 @@ const projects = [
       "Analyse de Kasiski : repérage des répétitions, calcul des distances et du PGCD pour retrouver la longueur de la clé.",
     ],
     tags: ["Python", "Cryptographie"],
+    featured: false,
+  },
+  {
+    org: "IUT du Limousin",
+    meta: ["BUT 2", "Module développement web (R3.01)"],
+    title: "Site de recettes en PHP",
+    context:
+      "Créer un site web dynamique de recettes de cuisine, dans l'esprit de Marmiton, pour appliquer le développement web côté serveur.",
+    bullets: [
+      "Site en PHP avec contenu dynamique.",
+    ],
+    tags: ["PHP", "HTML", "CSS"],
+    featured: false,
+  },
+  {
+    org: "IUT du Limousin",
+    meta: ["BUT 2", "Complément web (R4.Real.10)"],
+    title: "Clone de Netflix en JavaScript",
+    context:
+      "Reproduire l'interface d'un site de streaming pour explorer les différents composants d'une application web.",
+    bullets: [
+      "Découverte et assemblage des composants d'une interface web en JavaScript.",
+    ],
+    tags: ["JavaScript", "Composants web"],
     featured: false,
   },
   {
