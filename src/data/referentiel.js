@@ -94,7 +94,7 @@ const referentiel = [
             label: "Faire évoluer une application existante",
             status: "todo",
             evidence:
-              "En cours : accompagnement de l'évolution des API existantes de Legrand pendant l'alternance.",
+              "Objectif en cours : accompagner l'évolution des API existantes de Legrand pendant l'alternance.",
           },
           {
             code: "AC31.03",
@@ -132,14 +132,20 @@ const referentiel = [
           {
             code: "AC12.01",
             label: "Analyser un problème avec méthode (découpage en éléments algorithmiques simples, structure de données…)",
+            status: "done",
+            evidence: "SAÉ 1.01 et 1.02 : mini-jeux en Python et implémentation d'algorithmes, à partir de problèmes découpés avec méthode.",
           },
           {
             code: "AC12.02",
             label: "Comparer des algorithmes pour des problèmes classiques (tris simples, recherche…)",
+            status: "done",
+            evidence: "SAÉ 1.02 : comparaison d'approches algorithmiques sur des problèmes classiques.",
           },
           {
             code: "AC12.03",
             label: "Formaliser et mettre en œuvre des outils mathématiques pour l'informatique",
+            status: "done",
+            evidence: "Mathématiques discrètes, outils mathématiques fondamentaux et graphes (R1.06, R1.07, R2.07).",
           },
         ],
       },
@@ -157,6 +163,8 @@ const referentiel = [
             code: "AC22.02",
             label:
               "Utiliser des techniques algorithmiques adaptées pour des problèmes complexes (recherche opérationnelle, méthodes arborescentes, optimisation globale, intelligence artificielle…)",
+            status: "done",
+            evidence: "SAÉ 2.02 : exploration algorithmique d'un problème, sur le jeu Latice en Java.",
           },
           {
             code: "AC22.03",
@@ -169,7 +177,7 @@ const referentiel = [
             code: "AC22.04",
             label: "Évaluer l'impact environnemental et sociétal des solutions proposées",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : intégrer l'impact environnemental et sociétal dans mes choix techniques.",
           },
         ],
       },
@@ -187,7 +195,7 @@ const referentiel = [
             code: "AC32.02",
             label: "Profiler, analyser et justifier le comportement d'un code existant",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : profiler et analyser du code existant, notamment sur les API déjà en production chez Legrand.",
           },
           {
             code: "AC32.03",
@@ -223,9 +231,24 @@ const referentiel = [
       {
         title: "Installer et configurer un poste de travail",
         acs: [
-          { code: "AC13.01", label: "Identifier les différents composants (matériels et logiciels) d'un système numérique" },
-          { code: "AC13.02", label: "Utiliser les fonctionnalités de base d'un système multitâches / multiutilisateurs" },
-          { code: "AC13.03", label: "Installer et configurer un système d'exploitation et des outils de développement" },
+          {
+            code: "AC13.01",
+            label: "Identifier les différents composants (matériels et logiciels) d'un système numérique",
+            status: "done",
+            evidence: "Architecture des ordinateurs et systèmes d'exploitation (R1.03, R1.04), SAÉ 1.03.",
+          },
+          {
+            code: "AC13.02",
+            label: "Utiliser les fonctionnalités de base d'un système multitâches / multiutilisateurs",
+            status: "done",
+            evidence: "Utilisation d'un système Linux multi-utilisateurs (SAÉ 1.03, R1.04).",
+          },
+          {
+            code: "AC13.03",
+            label: "Installer et configurer un système d'exploitation et des outils de développement",
+            status: "done",
+            evidence: "SAÉ 1.03 : installation d'une machine virtuelle Linux et de l'environnement de développement.",
+          },
           {
             code: "AC13.04",
             label: "Configurer un poste de travail dans un réseau d'entreprise",
@@ -429,13 +452,30 @@ const referentiel = [
       {
         title: "Identifier ses aptitudes pour travailler dans une équipe",
         acs: [
-          { code: "AC16.01", label: "Appréhender l'écosystème numérique" },
-          { code: "AC16.02", label: "Découvrir les aptitudes requises selon les différents secteurs informatiques" },
+          {
+            code: "AC16.01",
+            label: "Appréhender l'écosystème numérique",
+            status: "done",
+            evidence: "Immersion dans l'écosystème informatique de Legrand (stage, CDD, puis alternance).",
+          },
+          {
+            code: "AC16.02",
+            label: "Découvrir les aptitudes requises selon les différents secteurs informatiques",
+            status: "done",
+            evidence: "SAÉ 1.06 : interview d'un professionnel et présentation de son métier en soutenance.",
+          },
           {
             code: "AC16.03",
             label: "Identifier les statuts, les fonctions et les rôles de chaque membre d'une équipe pluridisciplinaire",
+            status: "done",
+            evidence: "Collaboration avec développeurs, chefs de projet et équipes métier au sein de Legrand.",
           },
-          { code: "AC16.04", label: "Acquérir les compétences interpersonnelles pour travailler en équipe" },
+          {
+            code: "AC16.04",
+            label: "Acquérir les compétences interpersonnelles pour travailler en équipe",
+            status: "done",
+            evidence: "Travail quotidien en équipe chez Legrand, en stage, CDD puis alternance.",
+          },
         ],
       },
       {
@@ -444,6 +484,8 @@ const referentiel = [
           {
             code: "AC26.01",
             label: "Comprendre la diversité, la structure et la dimension de l'informatique dans une organisation (ESN, DSI…)",
+            status: "done",
+            evidence: "Découverte de l'organisation informatique d'un grand groupe industriel (Legrand) : équipes, outils, processus.",
           },
           {
             code: "AC26.02",
@@ -457,7 +499,12 @@ const referentiel = [
             status: "done",
             evidence: "Projet à cinq pour Legrand ; un an en équipe chez Lidl.",
           },
-          { code: "AC26.04", label: "Rendre compte de son activité professionnelle" },
+          {
+            code: "AC26.04",
+            label: "Rendre compte de son activité professionnelle",
+            status: "done",
+            evidence: "Points d'avancement réguliers avec l'équipe et le tuteur pendant l'alternance chez Legrand.",
+          },
         ],
       },
       {
@@ -467,19 +514,19 @@ const referentiel = [
             code: "AC36.01",
             label: "Organiser et partager une veille technologique et informationnelle",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : mettre en place une veille technologique régulière en alternance.",
           },
           {
             code: "AC36.02",
             label: "Identifier les enjeux de l'économie de l'innovation numérique",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : mieux comprendre les enjeux de l'innovation numérique, avec le cycle ingénieur.",
           },
           {
             code: "AC36.03",
             label: "Guider la conduite du changement informatique au sein d'une organisation",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : accompagner la conduite du changement au sein d'une équipe, en alternance.",
           },
           {
             code: "AC36.04",

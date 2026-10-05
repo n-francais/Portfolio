@@ -330,19 +330,14 @@ h3{font-size:1.15rem;font-weight:700;line-height:1.3;margin:0 0 .35rem}
   font:inherit;font-weight:700;cursor:pointer;text-align:left;
   border:1px solid var(--panel-border);background:var(--panel-bg);
   -webkit-backdrop-filter:blur(var(--blur));backdrop-filter:blur(var(--blur));
-  color:var(--ink);border-radius:16px;padding:.6rem .7rem;min-width:0;
-  display:flex;align-items:center;gap:.55rem;
+  color:var(--ink);border-radius:16px;padding:.7rem .8rem;min-width:0;
+  display:grid;gap:.15rem;
   box-shadow:var(--panel-shadow-sm);
   transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s ease,background-color .3s ease,border-color .3s ease
 }
 .ref-tabs button:hover{transform:translateY(-2px)}
-.ref-tabs .ref-tab-text{display:grid;gap:.1rem;min-width:0}
 .ref-tabs button span{font-weight:700}
 .ref-tabs button small{font-size:.76rem;color:var(--ink-soft)}
-.progress-ring{flex:none}
-.progress-ring-track{stroke:color-mix(in srgb,var(--c) 25%,var(--panel-border))}
-.progress-ring-bar{stroke:var(--c);transition:stroke-dashoffset .5s ease}
-.progress-ring-text{font-size:10px;font-weight:800;fill:var(--ink);font-family:var(--body)}
 .ref-tabs button[aria-selected="true"]{
   background:color-mix(in srgb,var(--c) 32%,var(--panel-bg-strong));
   border-color:color-mix(in srgb,var(--c) 55%,var(--panel-border));
@@ -388,9 +383,7 @@ h3{font-size:1.15rem;font-weight:700;line-height:1.3;margin:0 0 .35rem}
 .ac li.todo .ev{color:var(--brass);font-weight:600}
 @media (max-width: 860px){
   .ref-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .ref-tabs button{padding:.5rem .55rem;gap:.4rem;min-width:0}
-  .progress-ring{width:24px;height:24px}
-  .ref-tabs button small{display:none}
+  .ref-tabs button{padding:.6rem .65rem}
   .ref-cols{grid-template-columns:1fr;padding:1.1rem}
   .ref-head{padding:1.1rem}
   .ref-lv-title{padding:1.1rem 1.1rem 0}
