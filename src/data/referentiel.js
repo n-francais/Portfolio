@@ -132,14 +132,20 @@ const referentiel = [
           {
             code: "AC12.01",
             label: "Analyser un problème avec méthode (découpage en éléments algorithmiques simples, structure de données…)",
+            status: "done",
+            evidence: "SAÉ 1.01 et 1.02 : mini-jeux en Python et implémentation d'algorithmes, à partir de problèmes découpés avec méthode.",
           },
           {
             code: "AC12.02",
             label: "Comparer des algorithmes pour des problèmes classiques (tris simples, recherche…)",
+            status: "done",
+            evidence: "SAÉ 1.02 : comparaison d'approches algorithmiques sur des problèmes classiques.",
           },
           {
             code: "AC12.03",
             label: "Formaliser et mettre en œuvre des outils mathématiques pour l'informatique",
+            status: "done",
+            evidence: "Mathématiques discrètes, outils mathématiques fondamentaux et graphes (R1.06, R1.07, R2.07).",
           },
         ],
       },
@@ -157,6 +163,8 @@ const referentiel = [
             code: "AC22.02",
             label:
               "Utiliser des techniques algorithmiques adaptées pour des problèmes complexes (recherche opérationnelle, méthodes arborescentes, optimisation globale, intelligence artificielle…)",
+            status: "done",
+            evidence: "SAÉ 2.02 : exploration algorithmique d'un problème, sur le jeu Latice en Java.",
           },
           {
             code: "AC22.03",
@@ -223,9 +231,24 @@ const referentiel = [
       {
         title: "Installer et configurer un poste de travail",
         acs: [
-          { code: "AC13.01", label: "Identifier les différents composants (matériels et logiciels) d'un système numérique" },
-          { code: "AC13.02", label: "Utiliser les fonctionnalités de base d'un système multitâches / multiutilisateurs" },
-          { code: "AC13.03", label: "Installer et configurer un système d'exploitation et des outils de développement" },
+          {
+            code: "AC13.01",
+            label: "Identifier les différents composants (matériels et logiciels) d'un système numérique",
+            status: "done",
+            evidence: "Architecture des ordinateurs et systèmes d'exploitation (R1.03, R1.04), SAÉ 1.03.",
+          },
+          {
+            code: "AC13.02",
+            label: "Utiliser les fonctionnalités de base d'un système multitâches / multiutilisateurs",
+            status: "done",
+            evidence: "Utilisation d'un système Linux multi-utilisateurs (SAÉ 1.03, R1.04).",
+          },
+          {
+            code: "AC13.03",
+            label: "Installer et configurer un système d'exploitation et des outils de développement",
+            status: "done",
+            evidence: "SAÉ 1.03 : installation d'une machine virtuelle Linux et de l'environnement de développement.",
+          },
           {
             code: "AC13.04",
             label: "Configurer un poste de travail dans un réseau d'entreprise",
@@ -435,7 +458,12 @@ const referentiel = [
             status: "done",
             evidence: "Immersion dans l'écosystème informatique de Legrand (stage, CDD, puis alternance).",
           },
-          { code: "AC16.02", label: "Découvrir les aptitudes requises selon les différents secteurs informatiques" },
+          {
+            code: "AC16.02",
+            label: "Découvrir les aptitudes requises selon les différents secteurs informatiques",
+            status: "done",
+            evidence: "SAÉ 1.06 : interview d'un professionnel et présentation de son métier en soutenance.",
+          },
           {
             code: "AC16.03",
             label: "Identifier les statuts, les fonctions et les rôles de chaque membre d'une équipe pluridisciplinaire",
