@@ -94,7 +94,7 @@ const referentiel = [
             label: "Faire évoluer une application existante",
             status: "todo",
             evidence:
-              "En cours : accompagnement de l'évolution des API existantes de Legrand pendant l'alternance.",
+              "Objectif en cours : accompagner l'évolution des API existantes de Legrand pendant l'alternance.",
           },
           {
             code: "AC31.03",
@@ -169,7 +169,7 @@ const referentiel = [
             code: "AC22.04",
             label: "Évaluer l'impact environnemental et sociétal des solutions proposées",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : intégrer l'impact environnemental et sociétal dans mes choix techniques.",
           },
         ],
       },
@@ -187,7 +187,7 @@ const referentiel = [
             code: "AC32.02",
             label: "Profiler, analyser et justifier le comportement d'un code existant",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : profiler et analyser du code existant, notamment sur les API déjà en production chez Legrand.",
           },
           {
             code: "AC32.03",
@@ -486,19 +486,19 @@ const referentiel = [
             code: "AC36.01",
             label: "Organiser et partager une veille technologique et informationnelle",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : mettre en place une veille technologique régulière en alternance.",
           },
           {
             code: "AC36.02",
             label: "Identifier les enjeux de l'économie de l'innovation numérique",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : mieux comprendre les enjeux de l'innovation numérique, avec le cycle ingénieur.",
           },
           {
             code: "AC36.03",
             label: "Guider la conduite du changement informatique au sein d'une organisation",
             status: "todo",
-            evidence: "À documenter",
+            evidence: "Objectif : accompagner la conduite du changement au sein d'une équipe, en alternance.",
           },
           {
             code: "AC36.04",

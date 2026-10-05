@@ -32,7 +32,7 @@ export default function Program() {
       </p>
       <p className="legend">
         <span className="k done">Mis en œuvre dans mes projets</span>
-        <span className="k todo">À documenter</span>
+        <span className="k todo">Objectif en cours</span>
         <span className="k">Validé en cours (niveau 1)</span>
       </p>
 
