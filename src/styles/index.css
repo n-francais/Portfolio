@@ -421,7 +421,7 @@ h3{font-size:1.15rem;font-weight:700;line-height:1.3;margin:0 0 .35rem}
 }
 
 /* ---------- Hors code ---------- */
-.life{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1.25rem}
+.life{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1.25rem}
 .life > div{
   background:var(--panel-bg);-webkit-backdrop-filter:blur(var(--blur));backdrop-filter:blur(var(--blur));
   border:1px solid var(--panel-border);border-radius:20px;padding:1.5rem;box-shadow:var(--panel-shadow-sm);
@@ -430,9 +430,13 @@ h3{font-size:1.15rem;font-weight:700;line-height:1.3;margin:0 0 .35rem}
 @media (prefers-reduced-motion: no-preference){
   .life > div{animation:item-in .5s cubic-bezier(.16,1,.3,1) both}
   .life > div:nth-of-type(2){animation-delay:.08s}
+  .life > div:nth-of-type(3){animation-delay:.16s}
 }
 .life h3{font-family:var(--display);font-weight:800;font-size:1.3rem;margin-bottom:.5rem}
-.life p{color:var(--ink-soft);margin:0}
+.life p{color:var(--ink-soft);margin:0 0 .8rem}
+.life ul{margin:0;padding-left:1.1rem;color:var(--ink-soft);font-size:.95rem}
+.life li{margin:.25rem 0}
+.life li::marker{color:var(--pine)}
 
 .cta{
   background:color-mix(in srgb,var(--ink) 82%,transparent);
