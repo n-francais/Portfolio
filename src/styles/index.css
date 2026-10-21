@@ -125,7 +125,32 @@ p{margin:0 0 1em}
 }
 .landing:hover::before{opacity:1}
 .landing > *{position:relative;z-index:1}
-.landing .lead{max-width:28em}
+.landing .lead{max-width:28em;font-size:1rem;color:var(--ink-soft)}
+.landing-grid{
+  width:100%;max-width:72rem;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
+  gap:clamp(1.5rem,4vw,3.5rem);align-items:center;text-align:left
+}
+.landing-map{display:flex;flex-direction:column;align-items:center;gap:1.25rem;text-align:center;min-width:0}
+.intro{
+  background:var(--panel-bg);-webkit-backdrop-filter:blur(var(--blur));backdrop-filter:blur(var(--blur));
+  border:1px solid var(--panel-border);border-radius:28px;box-shadow:var(--panel-shadow-sm);
+  padding:clamp(1.25rem,2.5vw,2rem);min-width:0
+}
+.intro-kicker{margin:0 0 .4rem;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--pine)}
+.intro h1{margin:0;font-size:clamp(2rem,4vw,2.9rem);line-height:1.05;letter-spacing:-.02em;color:var(--ink)}
+.intro-role{margin:.7rem 0 0;font-size:1.02rem;color:var(--ink-soft)}
+.intro-text{margin:.9rem 0 0;line-height:1.5}
+.intro-block{margin-top:1.1rem}
+.intro-block h2{margin:0 0 .5rem;font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.intro-goal{margin:1.25rem 0 0}
+@media (prefers-reduced-motion: no-preference){
+  .intro{animation:item-in .6s cubic-bezier(.16,1,.3,1) both}
+  .landing-map{animation:item-in .6s .12s cubic-bezier(.16,1,.3,1) both}
+}
+@media (max-width: 980px){
+  .landing{justify-content:flex-start;padding:4.5rem 1.25rem 2rem}
+  .landing-grid{grid-template-columns:minmax(0,1fr)}
+}
 @media (prefers-reduced-motion: no-preference){
   .landing{animation:page-in .55s cubic-bezier(.16,1,.3,1) both}
 }
