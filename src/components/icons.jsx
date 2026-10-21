@@ -116,3 +116,46 @@ export const TIMELINE_ICONS = {
   code: CodeIcon,
   flag: FlagIcon,
 };
+
+export function PhoneIcon(props) {
+  return (
+    <svg {...common} {...props}>
+      <path d="M6.5 3.5h3l1.5 4-2 1.3a11 11 0 0 0 5.2 5.2l1.3-2 4 1.5v3a2 2 0 0 1-2.2 2A16 16 0 0 1 4.5 5.7a2 2 0 0 1 2-2.2z" />
+    </svg>
+  );
+}
+
+export function LinkedInIcon(props) {
+  return (
+    <svg {...common} {...props}>
+      <rect x="3.5" y="3.5" width="17" height="17" rx="3" />
+      <path d="M8 10.5V16M8 7.8v.1M11.5 16v-3.2a2.3 2.3 0 0 1 4.6 0V16M11.5 10.5V16" />
+    </svg>
+  );
+}
+
+export function PinIcon(props) {
+  return (
+    <svg {...common} {...props}>
+      <path d="M12 21s6.5-5.6 6.5-11a6.5 6.5 0 0 0-13 0c0 5.4 6.5 11 6.5 11z" />
+      <circle cx="12" cy="10" r="2.3" />
+    </svg>
+  );
+}
+
+export function CopyIcon(props) {
+  return (
+    <svg {...common} {...props}>
+      <rect x="8.5" y="8.5" width="11" height="11" rx="2" />
+      <path d="M15.5 8.5V6.5a2 2 0 0 0-2-2h-7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h2" />
+    </svg>
+  );
+}
+
+export function CheckIcon(props) {
+  return (
+    <svg {...common} {...props}>
+      <path d="M5 12.5l4.5 4.5L19 7.5" />
+    </svg>
+  );
+}
