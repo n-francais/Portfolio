@@ -9,28 +9,35 @@ export default function About() {
       <div className="status">
         <div>
           <strong>Rentrée 2027</strong>
-          Je cherche une école d'ingénieur en apprentissage pour poursuivre après mon BUT.
+          Je vise une école d'ingénieur ou un master pour m'orienter vers le management et la
+          gestion de projet informatique.
         </div>
       </div>
       <p className="lead">
-        Je conçois des applications web de bout en bout : l'API, l'interface, la base de
-        données, et le déploiement qui les met en ligne.
+        J'aime écrire du code, mais ce qui me motive vraiment, c'est de faire avancer un projet
+        avec une équipe : comprendre le besoin, organiser le travail, puis livrer.
       </p>
       <div className="prose">
         <p>
-          Je suis en 3<sup>e</sup> année du BUT Informatique de l'IUT du Limousin, dans le
-          parcours <strong>Réalisation d'applications : conception, développement, validation</strong>.
-          Ce parcours forme à concevoir des applications complexes, à les tester, à automatiser
-          ces tests et à les intégrer en continu. C'est exactement ce que j'ai pratiqué chez
-          Legrand : d'abord en stage puis en CDD, sur un outil de monitoring pour le logiciel
-          XLPro4 Tableaux, et depuis septembre 2026 en alternance, où je développe des API pour
-          le back-office et le front-office.
+          Je suis en 3<sup>e</sup> année du BUT Informatique de l'IUT du Limousin, parcours{" "}
+          <strong>Réalisation d'applications</strong>. Chez Legrand, j'ai d'abord développé seule
+          un outil de monitoring pour XLPro4 Tableaux, du recueil du besoin à la livraison. Depuis
+          septembre 2026, je travaille en alternance sur des API, au sein d'une équipe.
         </p>
         <p>
-          En parallèle des cours, j'ai été équipière chez Lidl pendant près d'un an et
-          vice-présidente du bureau des étudiants de ma formation. J'ai appris à tenir un
-          rythme, à parler aux gens et à m'organiser. Pour la suite, je veux devenir ingénieure
-          en génie logiciel, en alternant école et entreprise.
+          Ce que je retiens de ces projets, c'est que le code n'est qu'une partie du travail. Au
+          BUT, j'ai monté le backlog sur Azure DevOps pour l'application de modes opératoires,
+          animé des sprints Scrum et rédigé un cahier des charges avec priorisation MoSCoW. C'est
+          à ces moments-là que je me sens le plus à ma place.
+        </p>
+        <p>
+          Vice-présidente du bureau des étudiants de ma formation, j'ai coordonné une équipe et
+          des événements. Le rugby, le handball et l'orchestre m'ont appris la même chose :
+          chacun a son rôle, et l'on avance ensemble.
+        </p>
+        <p>
+          Pour la suite, je veux garder une base technique solide tout en me tournant vers le{" "}
+          <strong>management et la gestion de projet</strong>, en école d'ingénieur ou en master.
         </p>
       </div>
     </section>

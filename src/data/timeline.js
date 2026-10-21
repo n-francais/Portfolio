@@ -37,8 +37,8 @@ const timeline = [
   },
   {
     year: "2027",
-    title: "École d'ingénieur en apprentissage",
-    text: "Objectif : un cycle ingénieur en génie logiciel, en alternance.",
+    title: "École d'ingénieur ou master",
+    text: "Objectif : me spécialiser en management et gestion de projet informatique, idéalement en alternance.",
     icon: "flag",
     next: true,
   },
