@@ -50,6 +50,14 @@ export default function Contact() {
           >
             Voir mon LinkedIn
           </a>
+          <a
+            className="btn ghost"
+            href="https://github.com/n-francais"
+            target="_blank"
+            rel="noopener"
+          >
+            Voir mon GitHub
+          </a>
         </div>
       </div>
 
