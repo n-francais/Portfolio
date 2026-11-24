@@ -8,16 +8,17 @@ const SUN_X = 68; // le soleil, en thème clair
 // Sombre : rayons presque verticaux. Clair : ils partent du soleil en éventail.
 const tilt = (x) => ({ dark: (x - 50) * 0.3, light: (SUN_X - x) * 0.25 });
 
-export default function Ocean({ getAvoidRect, theme, fx, aquarium, gaugeRef }) {
+export default function Ocean({ getAvoidRect, theme, fx, aquarium, gaugeRef, engineRef, onGame }) {
   const pondRef = useRef(null);
   const seaRef = useRef(null);
-  const engineRef = useRef(null);
   const avoidRef = useRef(getAvoidRect);
   avoidRef.current = getAvoidRect;
   const themeRef = useRef(theme);
   themeRef.current = theme;
   const aquariumRef = useRef(aquarium);
   aquariumRef.current = aquarium;
+  const onGameRef = useRef(onGame);
+  onGameRef.current = onGame;
 
   const bubbles = useMemo(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return [];
@@ -38,6 +39,7 @@ export default function Ocean({ getAvoidRect, theme, fx, aquarium, gaugeRef }) {
       theme: themeRef.current,
       gauge: gaugeRef.current,
       feeding: aquariumRef.current,
+      onGame: (snap) => onGameRef.current(snap),
     });
     engineRef.current = engine;
     return engine.stop;

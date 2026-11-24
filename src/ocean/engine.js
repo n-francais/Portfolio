@@ -1,8 +1,9 @@
 /* Le bassin du portfolio : poissons, méduses, pieuvre, étoiles de mer et récif, dessinés et animés
    en canvas. `pond` reçoit les créatures, `sea` le récif et la neige marine. `getAvoidRect` renvoie la
    zone de texte que les poissons contournent (ou null). `gauge` est l'élément de la jauge de nourriture
-   (en mode aquarium). Renvoie `{ setTheme, setFeeding, rushTo, stop }`. */
+   (pendant le jeu). `onGame` reçoit l'état de la partie. Renvoie `{ setTheme, setFeeding, rushTo, startGame, stopGame, stop }`. */
 import { SPECIES, FISH, JELLY, FANS, STARS } from "./species";
+import { createGame, zone } from "./game";
 
 // Couleurs qui changent avec le thème : en sombre, les profondeurs ; en clair, l'eau près de la surface.
 // Les créatures et le récif sont rendus plus pastel côté CSS (filtre sur les canvas).
@@ -19,8 +20,43 @@ const PALETTES = {
   },
 };
 
-export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", feeding: feedingOn = false }) {
+// Qualité de rendu, du plus riche (3) au plus léger (0). Le moteur redescend tout seul si la machine
+// peine : moins de pixels, moins de fils dans les nageoires, plus d'ombres floues (très coûteuses),
+// et un plafond d'images par seconde.
+const QUALITIES = [
+  { name: "min", dpr: 1, strands: 0.25, shadow: 0, scales: false, fps: 30, snow: 0.5 },
+  { name: "low", dpr: 1, strands: 0.4, shadow: 0, scales: false, fps: 60, snow: 0.7 },
+  { name: "mid", dpr: 1.5, strands: 0.65, shadow: 1, scales: true, fps: 60, snow: 1 },
+  { name: "high", dpr: 2, strands: 1, shadow: 2, scales: true, fps: 60, snow: 1 },
+];
+
+// Qualité de départ selon la machine ; `?q=0..3` dans l'adresse la force (utile pour tester).
+const FORCED_Q = (() => {
+  const v = new URLSearchParams(location.search).get("q");
+  const n = v === null || v === "" ? NaN : Number(v);
+  return n >= 0 && n <= 3 ? Math.floor(n) : null;
+})();
+function startQuality() {
+  if (FORCED_Q !== null) return FORCED_Q;
+  const cores = navigator.hardwareConcurrency || 4, mem = navigator.deviceMemory || 8;
+  const coarse = matchMedia("(pointer: coarse)").matches;
+  if (cores <= 2 || mem <= 2) return 1;
+  return cores <= 4 || mem <= 4 || coarse ? 2 : 3;
+}
+
+// `matchMedia(...).addEventListener` n'existe pas sur les vieux Safari.
+const onMedia = (mq, fn) => (mq.addEventListener ? mq.addEventListener("change", fn) : mq.addListener(fn));
+const offMedia = (mq, fn) => (mq.removeEventListener ? mq.removeEventListener("change", fn) : mq.removeListener(fn));
+
+const noopEngine = { setTheme() {}, setFeeding() {}, rushTo() {}, startGame() {}, stopGame() {}, stop() {} };
+
+export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", feeding: feedingOn = false, onGame }) {
+  const g = pond.getContext("2d"), sc = sea.getContext("2d");
+  if (!g || !sc) return noopEngine; // pas de canvas 2D : on garde le décor CSS
   let pal = PALETTES[theme] || PALETTES.dark;
+  let qLevel = startQuality(), Q = QUALITIES[qLevel];
+  document.documentElement.dataset.quality = Q.name;
+  const game = createGame({ onChange: onGame });
   // Pendant le changement de thème, tout le monde nage vers la lumière (-1) ou plonge dans les profondeurs (1).
   let rush = null;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
@@ -31,7 +67,6 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
      parcourt le corps de la tête vers la queue, et des voiles (queue, dorsale, anale, pectorales)
      qui sont des chaînes souples : elles traînent derrière le corps, ondulent et se froncent
      sur les bords, comme la soie des combattants « halfmoon ». */
-  const g = pond.getContext("2d");
   let W = 0, H = 0, DPR = 1;
   const TAU = Math.PI * 2;
   const wrap = (a) => Math.atan2(Math.sin(a), Math.cos(a));
@@ -41,11 +76,11 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
   const nx = (a) => -Math.sin(a), ny = (a) => Math.cos(a);
 
   const stars = STARS.map((st) => ({ ...st }));
-  const fishes = FISH.map((o) => {
+  const fishes = FISH.map((o, i) => {
     const sp = SPECIES[o.kind], n = sp.widths.length;
     const pt = () => ({ x: 0, y: 0, a: 0 });
     return {
-      ...o, sp, n, h: (o.heading * Math.PI) / 180, hx: 0, hy: 0,
+      ...o, i, stun: 0, sp, n, h: (o.heading * Math.PI) / 180, hx: 0, hy: 0,
       joints: Array.from({ length: n }, pt), pts: Array.from({ length: n }, pt),
       veils: sp.veils.map((v, i) => ({ v, i, pts: Array.from({ length: v.segs + 1 }, pt) })),
       phase: Math.random() * TAU, boost: 1, energy: 1, food: null,
@@ -122,46 +157,71 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     c.lineTo(l.x, l.y);
   }
 
+  // Courbe lissée passant par les points d'un tableau plat [x0, y0, x1, y1, ...] (aucune allocation).
+  // `off` : indice du premier point, `n` : nombre de points, `rev` : parcours à l'envers.
+  function curveXY(a, off, n, start, rev) {
+    const base = rev ? off + n - 1 : off, st = rev ? -1 : 1;
+    if (start) g.moveTo(a[base * 2], a[base * 2 + 1]); else g.lineTo(a[base * 2], a[base * 2 + 1]);
+    for (let i = 1; i < n - 1; i++) {
+      const j = (base + st * i) * 2, j2 = j + st * 2;
+      g.quadraticCurveTo(a[j], a[j + 1], (a[j] + a[j2]) / 2, (a[j + 1] + a[j2 + 1]) / 2);
+    }
+    const e = (base + st * (n - 1)) * 2;
+    g.lineTo(a[e], a[e + 1]);
+  }
+
   const EDGE = 18;
+  // Tableaux de travail d'une nageoire, créés une seule fois.
+  function veilScratch(m, pleats) {
+    const maxK = pleats * 2, pts = m + 2;
+    return {
+      left: new Float32Array((m + 1) * 2), right: new Float32Array((m + 1) * 2), hw: new Float32Array(m + 1),
+      ang: new Float32Array(m + 1), edge: new Float32Array((EDGE + 1) * 2),
+      lines: new Float32Array((maxK + 1) * pts * 2), band: new Uint8Array(maxK + 1),
+    };
+  }
+
   function drawVeil(f, vs, t) {
     const v = vs.v, P = vs.pts, m = v.segs, L = f.L, sp = f.sp;
-    const left = [], right = [], hw = [], ang = [];
+    const S = vs.s || (vs.s = veilScratch(m, v.pleats));
+    const { left, right, hw, ang, edge, lines, band } = S;
     for (let i = 0; i <= m; i++) {
-      const a = P[Math.max(i - 1, 0)], b = P[Math.min(i + 1, m)];
+      const a = P[i > 0 ? i - 1 : 0], b = P[i < m ? i + 1 : m];
       const an = Math.atan2(a.y - b.y, a.x - b.x);
       const s = i / m, w = ((v.w0 + (v.w1 - v.w0) * (1 - (1 - s) * (1 - s))) * L) / 2;
-      ang.push(an); hw.push(w);
-      left.push({ x: P[i].x + nx(an) * w, y: P[i].y + ny(an) * w });
-      right.push({ x: P[i].x - nx(an) * w, y: P[i].y - ny(an) * w });
+      ang[i] = an; hw[i] = w;
+      left[i * 2] = P[i].x + nx(an) * w; left[i * 2 + 1] = P[i].y + ny(an) * w;
+      right[i * 2] = P[i].x - nx(an) * w; right[i * 2 + 1] = P[i].y - ny(an) * w;
     }
     // Bord arrondi (ou fourchu), froncé, qui ondule doucement.
-    const out = ang[m] + Math.PI, edge = [];
+    const out = ang[m] + Math.PI, co = Math.cos(out), si = Math.sin(out);
     for (let j = 0; j <= EDGE; j++) {
       const u = j / EDGE;
       const bulge = (v.fork ? (0.2 + 0.8 * Math.abs(u * 2 - 1)) * 0.8 : Math.sin(u * Math.PI) * 0.7) * hw[m];
       const ruf = Math.sin(u * Math.PI * 9 + t * 2.4 + f.s1) * v.ruffle * L * (0.55 + 0.45 * Math.sin(u * 7 + t * 1.3));
       const d = bulge + ruf;
-      edge.push({ x: lerp(left[m].x, right[m].x, u) + Math.cos(out) * d, y: lerp(left[m].y, right[m].y, u) + Math.sin(out) * d });
+      edge[j * 2] = lerp(left[m * 2], right[m * 2], u) + co * d;
+      edge[j * 2 + 1] = lerp(left[m * 2 + 1], right[m * 2 + 1], u) + si * d;
     }
-    const tip = edge[EDGE >> 1];
+    const tipX = edge[(EDGE >> 1) * 2], tipY = edge[(EDGE >> 1) * 2 + 1];
 
     // Membrane : un voile translucide qui relie les rayons, avec un léger halo.
     g.beginPath();
-    curve(left, true);
-    curve(edge, false);
-    curve(right.slice().reverse(), false);
+    curveXY(left, 0, m + 1, true, false);
+    curveXY(edge, 0, EDGE + 1, false, false);
+    curveXY(right, 0, m + 1, false, true);
     g.closePath();
-    const gr = g.createLinearGradient(P[0].x, P[0].y, tip.x, tip.y);
+    const gr = g.createLinearGradient(P[0].x, P[0].y, tipX, tipY);
     gr.addColorStop(0, sp.silk[0]); gr.addColorStop(0.45, sp.silk[1]); gr.addColorStop(0.8, sp.silk[2]); gr.addColorStop(1, sp.silk[3]);
     g.save();
     g.globalAlpha *= 0.55;
-    if (m >= 7) { g.shadowColor = `rgba(${sp.strands[0]},.35)`; g.shadowBlur = L * 0.05 * DPR; }
+    if (m >= 7 && Q.shadow >= 2) { g.shadowColor = `rgba(${sp.strands[0]},.35)`; g.shadowBlur = L * 0.05 * DPR; }
     g.fillStyle = gr;
     g.fill();
     g.restore();
     // Reflet irisé qui glisse sur la soie au rythme de la nage.
     const sh = (f.phase * 0.12 + v.at) % 1;
-    const sg = g.createLinearGradient(P[0].x, P[0].y, tip.x, tip.y);
+    const sg = g.createLinearGradient(P[0].x, P[0].y, tipX, tipY);
     sg.addColorStop(Math.max(0, sh - 0.14), "rgba(255,255,255,0)");
     sg.addColorStop(sh, "rgba(255,252,240,.16)");
     sg.addColorStop(Math.min(1, sh + 0.14), "rgba(255,255,255,0)");
@@ -169,34 +229,37 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     g.fill();
 
     // Rayons : de fins fils soyeux colorés par bandes, qui dépassent du bord en s'effilochant.
-    const K = v.pleats * 2, groups = sp.strands.map(() => []), all = [];
+    // Leur nombre dépend de la qualité ; les points sont écrits dans un tableau réutilisé.
+    const K = Math.max(6, Math.round(v.pleats * 2 * Q.strands)), pts = m + 2, nb = sp.strands.length;
     for (let r = 0; r <= K; r++) {
-      const u = (r / K) * 2 - 1, j = rnd(r, vs.i + f.s1);
-      const line = [];
-      for (let i = 0; i <= m; i++) line.push({ x: P[i].x + nx(ang[i]) * u * hw[i] * 0.97, y: P[i].y + ny(ang[i]) * u * hw[i] * 0.97 });
-      const e = edge[Math.round(((u + 1) / 2) * EDGE)];
+      const u = (r / K) * 2 - 1, j = rnd(r, vs.i + f.s1), base = r * pts;
+      for (let i = 0; i <= m; i++) {
+        lines[(base + i) * 2] = P[i].x + nx(ang[i]) * u * hw[i] * 0.97;
+        lines[(base + i) * 2 + 1] = P[i].y + ny(ang[i]) * u * hw[i] * 0.97;
+      }
+      const ei = Math.round(((u + 1) / 2) * EDGE) * 2;
       const ext = L * (0.01 + j * 0.07), sway = Math.sin(t * 2.2 + r * 0.9 + f.s2) * L * 0.012 * j;
-      line.push({ x: e.x + Math.cos(out) * ext + nx(out) * sway, y: e.y + Math.sin(out) * ext + ny(out) * sway });
-      const band = (Math.sin(u * sp.band + vs.i * 1.7 + f.s1) + 1) / 2;
-      groups[Math.min(groups.length - 1, Math.floor(band * groups.length))].push(line);
-      all.push(line);
+      lines[(base + m + 1) * 2] = edge[ei] + co * ext + nx(out) * sway;
+      lines[(base + m + 1) * 2 + 1] = edge[ei + 1] + si * ext + ny(out) * sway;
+      band[r] = Math.min(nb - 1, Math.floor(((Math.sin(u * sp.band + vs.i * 1.7 + f.s1) + 1) / 2) * nb));
     }
     g.lineCap = "round";
     g.lineWidth = Math.max(0.6, L * 0.0032);
-    groups.forEach((lines, k) => {
-      if (!lines.length) return;
+    for (let k = 0; k < nb; k++) {
       const c = sp.strands[k];
-      const lg = g.createLinearGradient(P[0].x, P[0].y, tip.x, tip.y);
+      const lg = g.createLinearGradient(P[0].x, P[0].y, tipX, tipY);
       lg.addColorStop(0, `rgba(${c},.85)`); lg.addColorStop(0.6, `rgba(${c},.7)`);
       lg.addColorStop(0.88, `rgba(${sp.tip},.55)`); lg.addColorStop(1, `rgba(${sp.tip},.05)`);
       g.beginPath();
-      for (const ln of lines) curve(ln, true);
+      let any = false;
+      for (let r = 0; r <= K; r++) if (band[r] === k) { curveXY(lines, r * pts, pts, true, false); any = true; }
+      if (!any) continue;
       g.strokeStyle = lg;
       g.stroke();
-    });
+    }
     // Quelques fils plus clairs, comme des reflets sur la soie.
     g.beginPath();
-    for (let r = 2; r < all.length; r += 4) curve(all[r], true);
+    for (let r = 2; r <= K; r += 4) curveXY(lines, r * pts, pts, true, false);
     g.strokeStyle = "rgba(255,255,255,.2)";
     g.lineWidth = Math.max(0.5, L * 0.0018);
     g.stroke();
@@ -224,27 +287,41 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
   const noShadow = () => { g.shadowColor = "transparent"; g.shadowBlur = 0; g.shadowOffsetX = 0; g.shadowOffsetY = 0; };
 
   // Écailles qui se chevauchent : un bord sombre et un liseré clair côté lumière.
+  // Les positions sont calculées dans un tableau réutilisé (aucune allocation par image).
+  const SCALE_MAX = 700;
+  const scalePts = new Float32Array(SCALE_MAX * 3);
   function scales(f) {
     const sp = f.sp, L = f.Lb, r = L * sp.scaleSize, step = r * 1.55;
     const rows = Math.max(4, Math.floor((0.64 * L) / (r * 1.2)));
-    const dark = [];
+    let n = 0;
     for (let j = 0; j <= rows; j++) {
       const q = sample(f, 0.19 + (0.64 * j) / rows), back = q.a + Math.PI;
       const cols = Math.ceil(q.w / step);
       for (let k = -cols; k <= cols; k++) {
         const off = k * step * 0.5 + (j % 2 ? step * 0.25 : 0);
-        if (Math.abs(off) > q.w * 0.47) continue;
-        dark.push([q.x + nx(q.a) * off, q.y + ny(q.a) * off, back]);
+        if (Math.abs(off) > q.w * 0.47 || n >= SCALE_MAX) continue;
+        scalePts[n * 3] = q.x + nx(q.a) * off;
+        scalePts[n * 3 + 1] = q.y + ny(q.a) * off;
+        scalePts[n * 3 + 2] = back;
+        n++;
       }
     }
     g.beginPath();
-    for (const [x, y, b] of dark) { g.moveTo(x + Math.cos(b - 1.15) * r, y + Math.sin(b - 1.15) * r); g.arc(x, y, r, b - 1.15, b + 1.15); }
+    for (let i = 0; i < n; i++) {
+      const x = scalePts[i * 3], y = scalePts[i * 3 + 1], b = scalePts[i * 3 + 2];
+      g.moveTo(x + Math.cos(b - 1.15) * r, y + Math.sin(b - 1.15) * r);
+      g.arc(x, y, r, b - 1.15, b + 1.15);
+    }
     g.strokeStyle = sp.scale;
     g.lineWidth = Math.max(0.6, L * 0.0032);
     g.stroke();
     g.beginPath();
     const lx = LIGHT.x * r * 0.28, ly = LIGHT.y * r * 0.28;
-    for (const [x, y, b] of dark) { g.moveTo(x + lx + Math.cos(b - 0.8) * r * 0.85, y + ly + Math.sin(b - 0.8) * r * 0.85); g.arc(x + lx, y + ly, r * 0.85, b - 0.8, b + 0.8); }
+    for (let i = 0; i < n; i++) {
+      const x = scalePts[i * 3] + lx, y = scalePts[i * 3 + 1] + ly, b = scalePts[i * 3 + 2];
+      g.moveTo(x + Math.cos(b - 0.8) * r * 0.85, y + Math.sin(b - 0.8) * r * 0.85);
+      g.arc(x, y, r * 0.85, b - 0.8, b + 0.8);
+    }
     g.strokeStyle = sp.scaleLight;
     g.lineWidth = Math.max(0.5, L * 0.0022);
     g.stroke();
@@ -263,10 +340,12 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     const last = P[n - 1];
     const gr = g.createLinearGradient(P[0].x, P[0].y, last.x, last.y);
     gr.addColorStop(0, sp.body[0]); gr.addColorStop(0.45, sp.body[1]); gr.addColorStop(1, sp.body[2]);
-    g.shadowColor = pal.shadow;
-    g.shadowBlur = 28 * DPR * f.size;
-    g.shadowOffsetX = 14 * DPR * f.size;
-    g.shadowOffsetY = 24 * DPR * f.size;
+    if (Q.shadow >= 1) {
+      g.shadowColor = pal.shadow;
+      g.shadowBlur = 28 * DPR * f.size;
+      g.shadowOffsetX = 14 * DPR * f.size;
+      g.shadowOffsetY = 24 * DPR * f.size;
+    }
     g.fillStyle = gr;
     g.fill();
     noShadow();
@@ -285,19 +364,27 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
       g.fillRect(cx - r, cy - r, r * 2, r * 2);
     }
 
-    scales(f);
+    if (Q.scales) scales(f);
 
     // Volume : ombre interne projetée depuis les bords opposés à la lumière.
-    g.beginPath();
-    g.rect(P[0].x - 3 * L, P[0].y - 3 * L, 6 * L, 6 * L);
-    bodyPath(f, false);
-    g.shadowColor = sp.shade;
-    g.shadowBlur = wmax * 0.5 * DPR;
-    g.shadowOffsetX = -LIGHT.x * wmax * 0.16 * DPR;
-    g.shadowOffsetY = -LIGHT.y * wmax * 0.16 * DPR;
-    g.fillStyle = "#000";
-    g.fill("evenodd");
-    noShadow();
+    if (Q.shadow >= 2) {
+      g.beginPath();
+      g.rect(P[0].x - 3 * L, P[0].y - 3 * L, 6 * L, 6 * L);
+      bodyPath(f, false);
+      g.shadowColor = sp.shade;
+      g.shadowBlur = wmax * 0.5 * DPR;
+      g.shadowOffsetX = -LIGHT.x * wmax * 0.16 * DPR;
+      g.shadowOffsetY = -LIGHT.y * wmax * 0.16 * DPR;
+      g.fillStyle = "#000";
+      g.fill("evenodd");
+      noShadow();
+    } else {
+      // Version légère : un liseré sombre sur le bord, à l'intérieur du corps (le clip le découpe).
+      bodyPath(f, true);
+      g.strokeStyle = sp.shade;
+      g.lineWidth = wmax * 0.26;
+      g.stroke();
+    }
 
     // Reflet doux le long du dos, décalé vers la lumière, puis un reflet net plus court.
     const spine = P.slice(1, n - 2).map((p) => ({ x: p.x + LIGHT.x * wmax * 0.1, y: p.y + LIGHT.y * wmax * 0.1 }));
@@ -306,10 +393,15 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     curve(spine, true);
     g.strokeStyle = sp.sheen;
     g.lineWidth = wmax * 0.2;
-    g.shadowColor = sp.sheen;
-    g.shadowBlur = wmax * 0.4 * DPR;
-    g.stroke();
-    noShadow();
+    if (Q.shadow >= 2) {
+      g.shadowColor = sp.sheen;
+      g.shadowBlur = wmax * 0.4 * DPR;
+      g.stroke();
+      noShadow();
+    } else {
+      g.lineWidth = wmax * 0.12;
+      g.stroke();
+    }
     g.beginPath();
     curve(spine.slice(1, Math.ceil(n * 0.55)), true);
     g.strokeStyle = "rgba(255,255,255,.45)";
@@ -521,8 +613,7 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     bell();
     const bg = g.createRadialGradient(0, -hgt * 0.55, R * 0.1, 0, -hgt * 0.4, R * 1.15);
     bg.addColorStop(0, "rgba(255,200,210,.85)"); bg.addColorStop(0.55, "rgba(250,150,172,.62)"); bg.addColorStop(1, "rgba(236,112,146,.45)");
-    g.shadowColor = "rgba(255,140,170,.65)";
-    g.shadowBlur = R * 0.9 * DPR;
+    if (Q.shadow >= 1) { g.shadowColor = "rgba(255,140,170,.65)"; g.shadowBlur = R * 0.9 * DPR; }
     g.fillStyle = bg;
     g.fill();
     noShadow();
@@ -570,7 +661,6 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
   }
 
   /* --- Neige marine : de fines particules qui dérivent, plus nettes au premier plan --- */
-  const sc = sea.getContext("2d");
   const SNOW = Array.from({ length: 110 }, (_, i) => ({ x: rnd(i, 3), y: rnd(i, 5), z: rnd(i, 9), s: rnd(i, 11) * 9 }));
   function drawSea(t, dt) {
     sc.setTransform(1, 0, 0, 1, 0, 0);
@@ -580,7 +670,8 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     drawFans(t);
     for (let band = 0; band < 3; band++) {
       sc.beginPath();
-      for (const p of SNOW) {
+      for (let n = 0, cnt = Math.floor(SNOW.length * Q.snow); n < cnt; n++) {
+        const p = SNOW[n];
         if (Math.min(2, Math.floor(p.z * 3)) !== band) continue;
         if (dt) {
           p.y += (0.006 + 0.014 * p.z) * dt;
@@ -815,7 +906,7 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     g.closePath();
     const gr = g.createRadialGradient(0, 0, R * 0.05, 0, 0, R);
     gr.addColorStop(0, "rgb(150,58,112)"); gr.addColorStop(0.35, "rgb(232,112,64)"); gr.addColorStop(1, "rgb(255,196,140)");
-    g.shadowColor = pal.starShadow; g.shadowBlur = R * 0.4 * DPR; g.shadowOffsetX = R * 0.12 * DPR; g.shadowOffsetY = R * 0.18 * DPR;
+    if (Q.shadow >= 1) { g.shadowColor = pal.starShadow; g.shadowBlur = R * 0.4 * DPR; g.shadowOffsetX = R * 0.12 * DPR; g.shadowOffsetY = R * 0.18 * DPR; }
     g.fillStyle = gr; g.fill();
     noShadow();
     g.save();
@@ -899,6 +990,11 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
         if (od > 1) { ax += (ox / od) * kk; ay += (oy / od) * kk; } else ax += (o.x < (keepOut.l + keepOut.r) / 2 ? -1 : 1) * kk;
       }
     }
+    if (game.playing) {
+      let near = null, nd = R * 6;
+      for (const p of foods) { const d = Math.hypot(p.x - o.x, p.y - o.y); if (d < nd) { nd = d; near = p; } }
+      if (near) { ax += ((near.x - o.x) / nd) * 1.6; ay += ((near.y - o.y) / nd) * 1.6; }
+    }
     const px = o.x - ptr.x, py = o.y - ptr.y, pd = Math.hypot(px, py);
     if (pd < R * 4 && ptr.speed > 380) {
       ax += (px / pd) * 3; ay += (py / pd) * 3;
@@ -967,7 +1063,7 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     g.beginPath(); g.ellipse(mx, my, R * 0.95, R * 0.75, o.ang, 0, TAU);
     const mg = g.createRadialGradient(mx - R * 0.3, my - R * 0.35, R * 0.1, mx, my, R);
     mg.addColorStop(0, "rgb(255,182,186)"); mg.addColorStop(0.6, "rgb(234,104,130)"); mg.addColorStop(1, "rgb(196,66,110)");
-    g.shadowColor = "rgba(255,120,150,.4)"; g.shadowBlur = R * 0.5 * DPR;
+    if (Q.shadow >= 1) { g.shadowColor = "rgba(255,120,150,.4)"; g.shadowBlur = R * 0.5 * DPR; }
     g.fillStyle = mg; g.fill();
     noShadow();
     g.save(); g.clip();
@@ -1012,7 +1108,7 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
   }
   function resize() {
     const pw = W, ph = H;
-    DPR = Math.min(devicePixelRatio || 1, 2);
+    DPR = Math.min(devicePixelRatio || 1, Q.dpr);
     W = innerWidth; H = innerHeight;
     pond.width = Math.round(W * DPR); pond.height = Math.round(H * DPR);
     sea.width = pond.width; sea.height = pond.height;
@@ -1072,11 +1168,13 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
   const onPointerDown = (e) => {
     if (reduce.matches || isUI(e.target)) return;
     if (ripples.length < 8) ripples.push({ x: e.clientX, y: e.clientY, age: 0 });
-    if (!feeding) return;
-    // Une pincée de granulés par clic, tant qu'il reste de la nourriture.
-    if (stock < 1) { shakeGauge(); return; }
-    stock -= 1;
-    paintGauge();
+    if (game.phase === "ready" || game.phase === "over") return;
+    // Pendant le jeu : une pincée coûte une unité de la jauge. Sinon (mode aquarium) c'est libre.
+    if (game.playing) {
+      if (stock < 1) { shakeGauge(); return; }
+      stock -= 1;
+      paintGauge();
+    } else if (!feeding) return;
     for (let i = 0; i < PINCH; i++) {
       if (foods.length >= 24) break;
       foods.push({ x: e.clientX + (Math.random() - 0.5) * 36, y: e.clientY + (Math.random() - 0.5) * 20, age: 0, s: Math.random() * 9 });
@@ -1125,6 +1223,7 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
       ax += (fx / fd) * 1.8; ay += (fy / fd) * 1.8;
       if (fd < L * 0.12) {
         f.food.eaten = true;
+        if (game.playing) game.feed(f.i);
         rings.push({ x: f.food.x, y: f.food.y, age: 0 });
         f.boost = 2.2;
       }
@@ -1144,7 +1243,7 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     const c = 0.5 + 0.5 * Math.sin(t * (0.45 + f.f2) + f.s2);
     const drive = Math.min(1, 0.25 + 0.75 * c * c + (f.boost - 1) * 0.6);
     f.glide = lerp(f.glide ?? drive, drive, Math.min(1, dt * 2));
-    const v = f.speed * f.boost * (0.55 + 0.6 * f.glide);
+    const v = (f.stun > 0 ? 0.35 : 1) * f.speed * f.boost * (0.55 + 0.6 * f.glide);
     f.hx += Math.cos(f.h) * v * dt;
     f.hy += Math.sin(f.h) * v * dt;
 
@@ -1156,23 +1255,67 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     for (const vs of f.veils) placeVeil(f, vs, dt);
   }
 
+  // Un poisson étourdi par une méduse ne mange plus pendant quelques secondes.
+  const GLUTTON_REACH = 0.6;
   function feed(dt) {
-    for (const f of fishes) f.food = null;
+    for (const f of fishes) { f.food = null; if (f.stun > 0) f.stun -= dt; }
+    const playing = game.playing;
     for (let i = foods.length - 1; i >= 0; i--) {
       const p = foods[i];
       p.age += dt;
       p.y += 8 * dt;
       p.x += Math.sin(p.age * 1.5 + p.s) * 6 * dt;
+      // La pieuvre chaparde les granulés qui passent à sa portée.
+      if (playing && Math.hypot(octo.x - p.x, octo.y - p.y) < octo.R * 1.5) {
+        p.eaten = true;
+        inks.push({ x: p.x, y: p.y, vx: 0, vy: -octo.R * 0.2, age: 2 });
+      }
       if (p.eaten || p.age > 14) { foods.splice(i, 1); continue; }
       let best = null, bd = Infinity;
       for (const f of fishes) {
-        const d = Math.hypot(f.hx - p.x, f.hy - p.y);
+        if (f.stun > 0) continue;
+        // Le koï glouton paraît toujours plus près : il rafle ce qui tombe à côté des autres.
+        const d = Math.hypot(f.hx - p.x, f.hy - p.y) * (f.glutton ? GLUTTON_REACH : 1);
         if (d < bd) { bd = d; best = f; }
       }
-      if (best && (!best.food || bd < Math.hypot(best.hx - best.food.x, best.hy - best.food.y))) best.food = p;
+      if (best && (!best.food || bd < Math.hypot(best.hx - best.food.x, best.hy - best.food.y) * (best.glutton ? GLUTTON_REACH : 1))) best.food = p;
     }
     for (let i = rings.length - 1; i >= 0; i--) if ((rings[i].age += dt) > 0.7) rings.splice(i, 1);
     for (let i = ripples.length - 1; i >= 0; i--) if ((ripples[i].age += dt) > 2) ripples.splice(i, 1);
+  }
+
+  // Les méduses étourdissent les poissons qui les frôlent.
+  function stunCheck() {
+    if (!game.playing) return;
+    for (const f of fishes) {
+      if (f.stun > 0) continue;
+      for (const j of jellies) {
+        if (Math.hypot(f.hx - j.x, f.hy - j.y) < j.R * 1.3 + f.L * 0.06) { f.stun = 2.6; break; }
+      }
+    }
+  }
+
+  // Barre de faim au-dessus de chaque poisson (et petites étoiles s'il est étourdi).
+  function drawHunger(t) {
+    for (const f of fishes) {
+      const h = game.hunger[f.i];
+      if (h === undefined) continue;
+      const w = Math.max(36, f.L * 0.2), x = f.hx - w / 2, y = f.hy - Math.max(34, f.L * 0.12) - 14;
+      const z = zone(h), color = z === "green" ? "#5ee07f" : z === "orange" ? "#f7b93e" : "#ff5a4d";
+      g.globalAlpha = z === "red" ? 0.55 + 0.45 * Math.abs(Math.sin(t * 6)) : 0.95;
+      g.fillStyle = "rgba(5,10,40,.55)";
+      g.fillRect(x - 2, y - 2, w + 4, 9);
+      g.fillStyle = color;
+      g.fillRect(x, y, w * h, 5);
+      g.globalAlpha = 1;
+      if (f.stun > 0) {
+        g.fillStyle = "#ffe36b";
+        for (let k = 0; k < 3; k++) {
+          const a = t * 5 + k * 2.1;
+          g.beginPath(); g.arc(f.hx + Math.cos(a) * 16, f.hy - f.L * 0.1 + Math.sin(a) * 6, 3, 0, TAU); g.fill();
+        }
+      }
+    }
   }
 
   function render(t) {
@@ -1205,6 +1348,7 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     for (const st of stars) drawStar(st, t);
     drawOcto(t);
     for (const f of fishes) if (!f.depth) drawFish(f, t);
+    if (game.active) drawHunger(t);
     for (const r of rings) {
       g.beginPath(); g.arc(r.x, r.y, 6 + r.age * 60, 0, TAU);
       g.strokeStyle = `rgba(255,255,255,${0.6 * (1 - r.age / 0.7)})`;
@@ -1231,8 +1375,36 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     }
   }
 
-  let last = 0, raf = 0, sinceAvoid = 0;
+  // Change la qualité de rendu (résolution, nombre de fils, ombres) et la signale au CSS.
+  function setQuality(level) {
+    qLevel = Math.max(0, Math.min(3, level));
+    Q = QUALITIES[qLevel];
+    document.documentElement.dataset.quality = Q.name;
+    resize();
+  }
+
+  // Régulateur : si la machine n'arrive pas à tenir environ 45 images par seconde pendant deux secondes
+  // d'affilée, on descend d'un niveau de qualité. On ne remonte pas, pour éviter les va-et-vient.
+  let gapSum = 0, gapN = 0, slow = 0, cooldown = 0;
+  function govern(gap, now) {
+    if (FORCED_Q !== null || gap <= 0 || gap > 250) return; // qualité imposée par ?q=, ou onglet resté en arrière-plan
+    gapSum += gap; gapN++;
+    if (gapSum < 1000 || gapN < 5) return; // une fenêtre d'environ une seconde
+    const avg = gapSum / gapN, limit = Q.fps === 30 ? 45 : 22.5;
+    gapSum = 0; gapN = 0;
+    slow = avg > limit ? slow + 1 : 0;
+    if (slow >= 2 && qLevel > 0 && now > cooldown) { slow = 0; cooldown = now + 2000; setQuality(qLevel - 1); }
+  }
+
+  let last = 0, raf = 0, sinceAvoid = 0, due = 0;
   function frame(now) {
+    raf = requestAnimationFrame(frame);
+    // Plafond d'images par seconde (sur un écran 120/144 Hz, inutile de dessiner à chaque tick).
+    if (now < due - 1) return;
+    const interval = 1000 / Q.fps;
+    due = now - due > interval ? now + interval : due + interval;
+    const last0 = last;
+    govern(last ? now - last : 0, now);
     const dt = Math.min((now - (last || now)) / 1000, 0.05);
     last = now;
     const t = now / 1000;
@@ -1240,21 +1412,28 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     if ((sinceAvoid += dt) > 0.3) { sinceAvoid = 0; updateKeepOut(); }
     ptr.speed *= Math.exp(-dt * 5);
     if (rush && (rush.left -= dt) <= 0) rush = null;
-    if (stock < FOOD_MAX) { stock = Math.min(FOOD_MAX, stock + dt / FOOD_REFILL_S); paintGauge(); }
+    if (stock < FOOD_MAX) {
+      // La jauge se recharge de plus en plus lentement au fil de la partie.
+      const refill = FOOD_REFILL_S * (game.playing ? 1 + 0.6 * (1 - Math.min(1, game.timeLeft / 60)) : 1);
+      stock = Math.min(FOOD_MAX, stock + dt / refill);
+      paintGauge();
+    }
+    // L'horloge du jeu suit le temps réel (jusqu'à 0,25 s par image), même sur une machine lente.
+    game.update(Math.min((now - (last0 || now)) / 1000, 0.25));
     feed(dt);
     for (const f of fishes) steer(f, dt, t);
+    stunCheck();
     for (const j of jellies) updateJelly(j, dt, t);
     for (const st of stars) updateStar(st, dt, t);
     updateOcto(dt, t);
     render(t);
     drawSea(t, dt);
-    raf = requestAnimationFrame(frame);
   }
 
   // Avec « réduire les animations », le bassin est dessiné une fois, immobile.
   function start() {
     cancelAnimationFrame(raf);
-    last = 0;
+    last = 0; due = 0;
     if (reduce.matches) { render(0); drawSea(0, 0); } else raf = requestAnimationFrame(frame);
   }
 
@@ -1264,13 +1443,28 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
   addEventListener("pointermove", onPointerMove);
   document.addEventListener("pointerleave", onPointerLeave);
   document.addEventListener("pointerdown", onPointerDown);
-  reduce.addEventListener("change", start);
+  onMedia(reduce, start);
 
   // Change de thème : le récif est redessiné avec la nouvelle palette (le reste suit à l'image suivante).
   function setTheme(name) {
     pal = PALETTES[name] || PALETTES.dark;
     buildReef();
     if (reduce.matches) { render(0); drawSea(0, 0); }
+  }
+
+  // Lance une partie : la jauge est pleine, les granulés et les étourdissements sont remis à zéro.
+  function startGame() {
+    if (reduce.matches) return;
+    foods.length = 0;
+    stock = FOOD_MAX;
+    paintGauge();
+    for (const f of fishes) f.stun = 0;
+    game.start(fishes.map((f) => f.appetite || 1));
+  }
+  function stopGame() {
+    if (game.phase === "idle") return;
+    foods.length = 0;
+    game.stop();
   }
 
   // Le mode aquarium active la distribution de nourriture ; hors de ce mode, un clic fait seulement des ondes.
@@ -1289,9 +1483,9 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     removeEventListener("pointermove", onPointerMove);
     document.removeEventListener("pointerleave", onPointerLeave);
     document.removeEventListener("pointerdown", onPointerDown);
-    reduce.removeEventListener("change", start);
+    offMedia(reduce, start);
   }
 
   paintGauge();
-  return { setTheme, setFeeding, rushTo, stop };
+  return { setTheme, setFeeding, rushTo, startGame, stopGame, stop };
 }

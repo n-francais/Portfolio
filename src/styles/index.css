@@ -334,7 +334,7 @@ details.comp[open] summary::after{transform:rotate(45deg)}
   opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,24px);
   transition:opacity .5s ease,transform .5s cubic-bezier(.16,1,.3,1),visibility 0s linear .5s
 }
-.app[data-aquarium] .food{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0);transition-delay:.25s,.25s,0s}
+.app[data-game="ready"] .food,.app[data-game="playing"] .food{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0);transition-delay:.25s,.25s,0s}
 .food-icon{flex:none;color:var(--koi)}
 .food-body{flex:1;min-width:0;display:grid;gap:.4rem}
 .food-hint{font-size:.82rem;font-weight:500;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -361,7 +361,86 @@ details.comp[open] summary::after{transform:rotate(45deg)}
   60%{transform:translate(calc(-50% - 5px),0)}
   80%{transform:translate(calc(-50% + 5px),0)}
 }
-@media (prefers-reduced-motion: reduce){.food{display:none}}
+@media (prefers-reduced-motion: reduce){.food,.play{display:none}}
+
+/* ---------- Jeu « Le repas équitable » ---------- */
+.play{
+  position:fixed;z-index:5;left:50%;bottom:max(1.4rem,env(safe-area-inset-bottom));transform:translateX(-50%);
+  display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 1.9rem;border-radius:999px;cursor:pointer;
+  font-weight:700;font-size:1.05rem;color:var(--btn-primary-ink);background:var(--koi);border:1px solid var(--koi);
+  box-shadow:0 14px 40px rgba(0,0,0,.28);animation:play-in .5s cubic-bezier(.16,1,.3,1) both;transition:transform .25s ease,filter .25s ease
+}
+.play:hover{transform:translateX(-50%) translateY(-2px);filter:brightness(1.1)}
+@keyframes play-in{from{opacity:0;transform:translate(-50%,16px)}to{opacity:1;transform:translateX(-50%)}}
+
+.hud{
+  position:fixed;z-index:6;top:1rem;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:1.1rem;
+  padding:.5rem .6rem .5rem 1.3rem;border-radius:999px;background:var(--dock-bg);border:1px solid var(--line);
+  -webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3);box-shadow:var(--dock-shadow);
+  font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap
+}
+/* Sur petit écran, le compteur passe sous les boutons ronds pour ne pas les recouvrir. */
+@media (max-width:560px){.hud{top:4.3rem}}
+.hud-time,.hud-score{font-size:1.3rem;font-weight:700;line-height:1}
+.hud-time small,.hud-score small{font-size:.75rem;font-weight:500;color:var(--soft)}
+.hud-stop{
+  width:2rem;height:2rem;border-radius:50%;border:1px solid var(--line);background:var(--glass-strong);color:var(--ink);
+  cursor:pointer;font-size:.85rem;line-height:1
+}
+.hud-stop:hover{background:var(--glass-hover)}
+.ready{
+  position:fixed;z-index:6;inset:0;display:grid;place-content:center;gap:.6rem;text-align:center;padding:1.5rem;pointer-events:none;
+  text-shadow:var(--text-glow);animation:ready-in .3s ease both
+}
+.ready b{font-family:var(--serif);font-weight:400;font-size:clamp(3rem,10vw,6rem);line-height:1}
+.ready span{max-width:28rem;margin:0 auto;color:var(--soft);font-size:1.05rem}
+@keyframes ready-in{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+
+.over{position:fixed;z-index:8;inset:0;display:grid;place-items:center;padding:1.25rem;background:rgba(2,6,30,.35);animation:ready-in .35s ease both}
+html[data-theme="light"] .over{background:rgba(220,244,255,.4)}
+.over-card{
+  width:min(24rem,100%);padding:1.8rem;border-radius:28px;text-align:center;color:var(--ink);
+  background:var(--dock-bg);border:1px solid var(--line);
+  -webkit-backdrop-filter:blur(26px) saturate(1.3);backdrop-filter:blur(26px) saturate(1.3);box-shadow:var(--panel-shadow)
+}
+.over-card h2{margin:0;font-family:var(--serif);font-weight:400;font-size:2.2rem}
+.over-score{margin:.6rem 0 0;font-size:3.4rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.over-score small{font-size:1rem;font-weight:500;color:var(--soft)}
+.over-note{margin:.8rem 0 0;color:var(--gold);font-weight:600;font-size:.95rem}
+.over-best{margin:.6rem 0 0;color:var(--soft)}
+.over-actions{display:flex;justify-content:center;gap:.6rem;margin-top:1.4rem}
+
+/* ---------- Machines modestes : le moteur baisse la qualité, on allège aussi le CSS ---------- */
+/* Les flous d'arrière-plan sont le plus coûteux sur un processeur graphique intégré : on les remplace par un fond plus opaque. */
+html[data-quality="low"],html[data-quality="min"]{--panel-solid:rgba(9,16,66,.88)}
+html[data-quality="low"][data-theme="light"],html[data-quality="min"][data-theme="light"]{--panel-solid:rgba(232,249,255,.9)}
+html[data-quality="low"] .view--sheet,html[data-quality="min"] .view--sheet,
+html[data-quality="low"] .dock,html[data-quality="min"] .dock,
+html[data-quality="low"] .round-btn,html[data-quality="min"] .round-btn,
+html[data-quality="low"] .food,html[data-quality="min"] .food,
+html[data-quality="low"] .hud,html[data-quality="min"] .hud,
+html[data-quality="low"] .over-card,html[data-quality="min"] .over-card,
+html[data-quality="low"] .chips li,html[data-quality="min"] .chips li,
+html[data-quality="low"] .goal,html[data-quality="min"] .goal{
+  -webkit-backdrop-filter:none;backdrop-filter:none
+}
+html[data-quality="low"] .view--sheet,html[data-quality="min"] .view--sheet,
+html[data-quality="low"] .dock,html[data-quality="min"] .dock,
+html[data-quality="low"] .round-btn,html[data-quality="min"] .round-btn,
+html[data-quality="low"] .food,html[data-quality="min"] .food,
+html[data-quality="low"] .hud,html[data-quality="min"] .hud,
+html[data-quality="low"] .over-card,html[data-quality="min"] .over-card{background:var(--panel-solid)}
+html[data-quality="low"] .round-btn[aria-pressed="true"],html[data-quality="min"] .round-btn[aria-pressed="true"]{background:var(--tab-on-bg)}
+/* Rayons flous et miroitement animés : coûteux, on les fige. */
+html[data-quality="low"] .rays i,html[data-quality="min"] .rays i{filter:none;animation:none}
+html[data-quality="low"] .surface::after,html[data-quality="min"] .surface::after,
+html[data-quality="low"] .water::before,html[data-quality="min"] .water::before{animation:none}
+/* Le filtre pastel du thème clair est remplacé par un simple voile blanc, bien moins cher. */
+html[data-quality="low"][data-theme="light"] #pond,html[data-quality="min"][data-theme="light"] #pond,
+html[data-quality="low"][data-theme="light"] #sea,html[data-quality="min"][data-theme="light"] #sea{filter:none}
+html[data-quality="low"][data-theme="light"] .app::after,html[data-quality="min"][data-theme="light"] .app::after{
+  content:"";position:fixed;inset:0;z-index:1;pointer-events:none;background:rgba(255,255,255,.22)
+}
 
 /* ---------- Thème clair : la surface, au soleil ---------- */
 html[data-theme="light"]{
