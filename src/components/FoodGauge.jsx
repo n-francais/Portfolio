@@ -19,7 +19,10 @@ const FoodGauge = forwardRef(function FoodGauge(_, ref) {
       </svg>
       <div className="food-body">
         <span className="food-hint">
-          <span className="food-hint-full">Clique sur l&apos;eau pour nourrir</span>
+          <span className="food-hint-full">
+            <span className="food-hint-click">Clique</span>
+            <span className="food-hint-tap">Touche</span> l&apos;eau pour nourrir
+          </span>
           <span className="food-hint-empty">Plus de nourriture, ça se recharge…</span>
         </span>
         <span className="food-bar">

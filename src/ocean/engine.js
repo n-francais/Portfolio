@@ -1140,6 +1140,8 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
     ptr.x = e.clientX; ptr.y = e.clientY; ptr.t = now;
   };
   const onPointerLeave = () => { ptr.x = ptr.y = -1e4; ptr.t = 0; };
+  // Au tactile, le doigt levé n'est plus « un curseur » : sinon le dernier point touché attirerait les poissons.
+  const onPointerUp = (e) => { if (e.pointerType !== "mouse") onPointerLeave(); };
 
   const foods = [], rings = [], ripples = [];
 
@@ -1439,8 +1441,13 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
 
   resize();
   start();
-  addEventListener("resize", resize);
+  // La barre d'adresse des mobiles déclenche beaucoup de « resize » : on attend qu'ils cessent.
+  let resizeTimer = 0;
+  const onResize = () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 150); };
+  addEventListener("resize", onResize);
   addEventListener("pointermove", onPointerMove);
+  addEventListener("pointerup", onPointerUp);
+  addEventListener("pointercancel", onPointerUp);
   document.addEventListener("pointerleave", onPointerLeave);
   document.addEventListener("pointerdown", onPointerDown);
   onMedia(reduce, start);
@@ -1479,8 +1486,11 @@ export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", fe
 
   function stop() {
     cancelAnimationFrame(raf);
-    removeEventListener("resize", resize);
+    clearTimeout(resizeTimer);
+    removeEventListener("resize", onResize);
     removeEventListener("pointermove", onPointerMove);
+    removeEventListener("pointerup", onPointerUp);
+    removeEventListener("pointercancel", onPointerUp);
     document.removeEventListener("pointerleave", onPointerLeave);
     document.removeEventListener("pointerdown", onPointerDown);
     offMedia(reduce, start);
