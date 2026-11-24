@@ -1,25 +1,22 @@
+import Sheet from "./Sheet";
 import hobbies from "../data/hobbies";
 
 export default function HorsCode() {
   return (
-    <section id="horscode">
-      <h2>Hors code</h2>
-      <p className="lead">
-        En dehors du code, la musique, l'art et le sport rythment mon quotidien.
-      </p>
-      <div className="life">
-        {hobbies.map((hobby) => (
-          <div key={hobby.title}>
-            <h3>{hobby.title}</h3>
-            <p>{hobby.intro}</p>
-            <ul>
-              {hobby.bullets.map((bullet) => (
-                <li key={bullet}>{bullet}</li>
+    <Sheet title="Hors code" lead="Ce qui m'occupe quand je ne programme pas.">
+      <div className="grid">
+        {hobbies.map((x) => (
+          <article key={x.title} className="card">
+            <h3>{x.title}</h3>
+            <p className="ctx">{x.intro}</p>
+            <ul className="bul">
+              {x.bullets.map((b) => (
+                <li key={b}>{b}</li>
               ))}
             </ul>
-          </div>
+          </article>
         ))}
       </div>
-    </section>
+    </Sheet>
   );
 }

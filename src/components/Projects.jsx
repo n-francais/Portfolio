@@ -1,47 +1,34 @@
+import Sheet, { Chips } from "./Sheet";
 import projects from "../data/projects";
-import useTilt from "../hooks/useTilt";
+
+// Les projets à la une d'abord.
+const ordered = [...projects].sort((a, b) => Number(!!b.featured) - Number(!!a.featured));
 
 export default function Projects() {
-  const tilt = useTilt();
-
   return (
-    <section id="projets">
-      <h2>Projets</h2>
-
-      {projects.map((project) => (
-        <article
-          key={project.title}
-          className={`project${project.featured ? " feature" : ""}`}
-          onMouseMove={tilt.onMouseMove}
-          onMouseLeave={tilt.onMouseLeave}
-        >
-          <div className="p-meta">
-            <b>{project.org}</b>
-            {project.meta.map((line, i) => (
-              <span key={i}>
-                {i > 0 && <br />}
-                {line}
-              </span>
-            ))}
-          </div>
-          <div>
-            <h3>{project.title}</h3>
-            <p className="ctx">{project.context}</p>
-            <ul>
-              {project.bullets.map((bullet, i) => (
-                <li key={i}>{bullet}</li>
+    <Sheet title="Projets" lead="Alternance chez Legrand, SAÉ du BUT et projets de cours.">
+      <div className="grid">
+        {ordered.map((p) => (
+          <article key={p.title} className={`card${p.featured ? " featured" : ""}`}>
+            <p className="meta">
+              <b>{p.org}</b>
+              {(p.meta || []).map((m) => (
+                <span key={m}>{m}</span>
               ))}
-            </ul>
-            {project.tags.length > 0 && (
-              <ul className="tags">
-                {project.tags.map((tag) => (
-                  <li key={tag}>{tag}</li>
+            </p>
+            <h3>{p.title}</h3>
+            {p.context && <p className="ctx">{p.context}</p>}
+            {p.bullets?.length > 0 && (
+              <ul className="bul">
+                {p.bullets.map((b) => (
+                  <li key={b}>{b}</li>
                 ))}
               </ul>
             )}
-          </div>
-        </article>
-      ))}
-    </section>
+            {p.tags?.length > 0 && <Chips items={p.tags} />}
+          </article>
+        ))}
+      </div>
+    </Sheet>
   );
 }
