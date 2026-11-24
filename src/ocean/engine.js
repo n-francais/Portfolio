@@ -208,7 +208,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
   function scales(f) {
     const sp = f.sp, L = f.Lb, r = L * sp.scaleSize, step = r * 1.55;
     const rows = Math.max(4, Math.floor((0.64 * L) / (r * 1.2)));
-    const dark = [], light = [];
+    const dark = [];
     for (let j = 0; j <= rows; j++) {
       const q = sample(f, 0.19 + (0.64 * j) / rows), back = q.a + Math.PI;
       const cols = Math.ceil(q.w / step);
