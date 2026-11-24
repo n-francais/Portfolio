@@ -78,11 +78,11 @@ export const SPECIES = {
 
 // Ordre d'affichage : les plus profonds d'abord.
 export const FISH = [
-  { kind: "ogon", size: .52, speed: 50, turn: 1,   freq: 1.4,  x: .24, y: .86, heading: -40,  depth: .22 },
-  { kind: "rose", size: .78, speed: 30, turn: .75, freq: 1.3,  x: .08, y: .82, heading: -70,  depth: .12 },
-  { kind: "koi",  size: .95, speed: 34, turn: .55, freq: .9,   x: .17, y: .5,  heading: -90 },
-  { kind: "opal", size: .92, speed: 27, turn: .7,  freq: 1.2,  x: .9,  y: .62, heading: 200 },
-  { kind: "gold", size: 1.05, speed: 26, turn: .7, freq: 1.25, x: .85, y: .22, heading: 150 },
+  { kind: "ogon", appetite: 1.2, size: .52, speed: 50, turn: 1,   freq: 1.4,  x: .24, y: .86, heading: -40,  depth: .22 },
+  { kind: "rose", appetite: 1, size: .78, speed: 30, turn: .75, freq: 1.3,  x: .08, y: .82, heading: -70,  depth: .12 },
+  { kind: "koi",  appetite: 1.5, glutton: true, size: .95, speed: 34, turn: .55, freq: .9,   x: .17, y: .5,  heading: -90 },
+  { kind: "opal", appetite: 1, size: .92, speed: 27, turn: .7,  freq: 1.2,  x: .9,  y: .62, heading: 200 },
+  { kind: "gold", appetite: 1, size: 1.05, speed: 26, turn: .7, freq: 1.25, x: .85, y: .22, heading: 150 },
 ];
 
 

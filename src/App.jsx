@@ -3,6 +3,7 @@ import Ocean from "./components/Ocean";
 import ThemeToggle from "./components/ThemeToggle";
 import AquariumToggle from "./components/AquariumToggle";
 import FoodGauge from "./components/FoodGauge";
+import { PlayButton, GameHud, GameOver } from "./components/GameUI";
 import ThemeTransition from "./components/ThemeTransition";
 import Home from "./components/Home";
 import About from "./components/About";
@@ -33,6 +34,9 @@ function App() {
   // Mode aquarium : le texte est masqué, on ne voit que les poissons, que l'on peut nourrir.
   const [aquarium, setAquarium] = useState(false);
   const gaugeRef = useRef(null);
+  const engineRef = useRef(null);
+  const [game, setGame] = useState({ phase: "idle", time: 60, score: 0, best: 0, perfect: true, newRecord: false });
+  const inGame = game.phase !== "idle";
   const homeRef = useRef(null);
   const panelRefs = useRef({});
   const tabRefs = useRef({});
@@ -47,11 +51,17 @@ function App() {
   useEffect(() => {
     const onKeyDown = (e) => {
       if (e.key !== "Escape") return;
-      if (aquarium) setAquarium(false);
+      if (inGame) engineRef.current?.stopGame();
+      else if (aquarium) setAquarium(false);
       else if (window.location.hash.slice(1) !== "accueil") go("accueil");
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
+  }, [aquarium, inGame]);
+
+  // Quitter le mode aquarium (œil) arrête la partie.
+  useEffect(() => {
+    if (!aquarium) engineRef.current?.stopGame();
   }, [aquarium]);
 
   // Sur l'accueil, les poissons contournent le bloc de texte (sauf sur petit écran, où il couvre tout).
@@ -71,13 +81,16 @@ function App() {
   };
 
   return (
-    <div className="app" data-view={view} data-aquarium={aquarium ? "" : undefined}>
-      <Ocean getAvoidRect={getAvoidRect} theme={theme} fx={fx} aquarium={aquarium} gaugeRef={gaugeRef} />
+    <div className="app" data-view={view} data-aquarium={aquarium ? "" : undefined} data-game={inGame ? game.phase : undefined}>
+      <Ocean getAvoidRect={getAvoidRect} theme={theme} fx={fx} aquarium={aquarium} gaugeRef={gaugeRef} engineRef={engineRef} onGame={setGame} />
       <div className="controls">
         <AquariumToggle active={aquarium} onToggle={() => setAquarium((on) => !on)} />
         <ThemeToggle theme={theme} onToggle={toggleTheme} />
       </div>
       <FoodGauge ref={gaugeRef} />
+      {aquarium && !inGame && <PlayButton onStart={() => engineRef.current?.startGame()} />}
+      <GameHud game={game} onStop={() => engineRef.current?.stopGame()} />
+      <GameOver game={game} onRestart={() => engineRef.current?.startGame()} onQuit={() => engineRef.current?.stopGame()} />
       <ThemeTransition fx={fx} />
 
       <a className="brand" href="#accueil" aria-label="Nina Français, retour à l'accueil">
