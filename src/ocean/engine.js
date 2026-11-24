@@ -20,6 +20,8 @@ const PALETTES = {
 
 export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
   let pal = PALETTES[theme] || PALETTES.dark;
+  // Pendant le changement de thème, tout le monde nage vers la lumière (-1) ou plonge dans les profondeurs (1).
+  let rush = null;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   const isUI = (el) => el.closest("button,a,summary,.view--sheet,.dock,.goal,.home-inner,.brand");
 
@@ -433,6 +435,7 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
 
   function updateJelly(j, dt, t) {
     j.startle = Math.max(0, j.startle - dt);
+    if (rush) { j.startle = Math.max(j.startle, 0.4); j.vy += rush.dir * j.R * 5 * dt; }
     j.phase += dt * TAU * (j.startle > 0 ? 0.9 : 0.42);
     const { p } = bellShape(j);
     // Poussée pendant la contraction, puis lente redescente.
@@ -880,6 +883,7 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
   function updateOcto(dt, t) {
     const o = octo, R = o.R;
     o.startle = Math.max(0, o.startle - dt);
+    if (rush) { o.startle = Math.max(o.startle, 0.4); o.vy += rush.dir * o.R * 6 * dt; }
     o.phase += dt * TAU * (o.startle > 0 ? 0.9 : 0.33);
     const jet = Math.max(0, Math.sin(o.phase)) ** 3;
     // Direction : errance, bords (elle peut sortir puis revient), texte de l'accueil, curseur.
@@ -1061,6 +1065,7 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
     const edge = (d, lim) => (d < lim ? Math.min(2, (lim - d) / lim) : 0);
     let ax = edge(f.hx + B, m) - edge(W + B - f.hx, m);
     let ay = edge(f.hy + B, m) - edge(H + B - f.hy, m);
+    if (rush) { ay += rush.dir * 2.6; ax *= 0.4; }
 
     if (keepOut) {
       const cx = Math.max(keepOut.l, Math.min(f.hx, keepOut.r)), cy = Math.max(keepOut.t, Math.min(f.hy, keepOut.b));
@@ -1101,7 +1106,7 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
     }
     f.h = wrap(f.h + turn * dt);
 
-    const target = 1 + fleeing * 1.8 + (f.food ? 0.6 : 0);
+    const target = 1 + fleeing * 1.8 + (f.food ? 0.6 : 0) + (rush ? 1.2 : 0);
     f.boost += (target - f.boost) * Math.min(1, dt * 2.5);
     // Nage par à-coups : quelques battements de queue, puis une glissade.
     const c = 0.5 + 0.5 * Math.sin(t * (0.45 + f.f2) + f.s2);
@@ -1202,6 +1207,7 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
     // La zone de texte bouge avec l'onglet et le défilement : on la relit régulièrement.
     if ((sinceAvoid += dt) > 0.3) { sinceAvoid = 0; updateKeepOut(); }
     ptr.speed *= Math.exp(-dt * 5);
+    if (rush && (rush.left -= dt) <= 0) rush = null;
     feed(dt);
     for (const f of fishes) steer(f, dt, t);
     for (const j of jellies) updateJelly(j, dt, t);
@@ -1234,6 +1240,11 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
     if (reduce.matches) { render(0); drawSea(0, 0); }
   }
 
+  // Lance la ruée : `up` pour remonter vers la surface, `down` pour plonger.
+  function rushTo(dir) {
+    rush = { dir: dir === "up" ? -1 : 1, left: 1.7 };
+  }
+
   function stop() {
     cancelAnimationFrame(raf);
     removeEventListener("resize", resize);
@@ -1243,5 +1254,5 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
     reduce.removeEventListener("change", start);
   }
 
-  return { setTheme, stop };
+  return { setTheme, rushTo, stop };
 }

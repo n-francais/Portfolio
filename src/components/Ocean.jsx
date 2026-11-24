@@ -8,7 +8,7 @@ const SUN_X = 68; // le soleil, en thème clair
 // Sombre : rayons presque verticaux. Clair : ils partent du soleil en éventail.
 const tilt = (x) => ({ dark: (x - 50) * 0.3, light: (SUN_X - x) * 0.25 });
 
-export default function Ocean({ getAvoidRect, theme }) {
+export default function Ocean({ getAvoidRect, theme, fx }) {
   const pondRef = useRef(null);
   const seaRef = useRef(null);
   const engineRef = useRef(null);
@@ -42,6 +42,11 @@ export default function Ocean({ getAvoidRect, theme }) {
   useEffect(() => {
     engineRef.current?.setTheme(theme);
   }, [theme]);
+
+  // Pendant la transition, les créatures nagent vers la lumière ou plongent.
+  useEffect(() => {
+    if (fx) engineRef.current?.rushTo(fx.dir);
+  }, [fx]);
 
   return (
     <>
