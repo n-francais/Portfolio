@@ -6,6 +6,15 @@
     <title>Nina Français — Développeuse full-stack</title>
     <meta name="description" content="Portfolio de Nina Français, développeuse full-stack en 3e année de BUT Informatique à l'IUT du Limousin, en recherche d'une école d'ingénieur ou d'un master en management et gestion de projet.">
     <meta name="theme-color" content="#060d36">
+    <script>
+      // Applique le thème avant le premier affichage, pour éviter un flash : choix mémorisé, sinon réglage du système.
+      try {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.dataset.theme = t;
+        if (t === "light") document.querySelector('meta[name="theme-color"]').setAttribute("content", "#7fd3ec");
+      } catch (e) { document.documentElement.dataset.theme = "dark"; }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Italiana&display=swap" rel="stylesheet">

@@ -1,9 +1,25 @@
 /* Le bassin du portfolio : poissons, méduses, pieuvre, étoiles de mer et récif, dessinés et animés
    en canvas. `pond` reçoit les créatures, `sea` le récif et la neige marine. `getAvoidRect` renvoie la
-   zone de texte que les poissons contournent (ou null). Renvoie une fonction qui arrête tout. */
+   zone de texte que les poissons contournent (ou null). Renvoie `{ setTheme, stop }`. */
 import { SPECIES, FISH, JELLY, FANS, STARS } from "./species";
 
-export function createOcean({ pond, sea, getAvoidRect }) {
+// Couleurs qui changent avec le thème : en sombre, les profondeurs ; en clair, l'eau près de la surface.
+// Les créatures et le récif sont rendus plus pastel côté CSS (filtre sur les canvas).
+const PALETTES = {
+  dark: {
+    shadow: "rgba(2,0,40,.5)", starShadow: "rgba(0,0,20,.55)", tint: "4,10,48",
+    snow: "190,210,255", snowAlpha: [0.16, 0.3, 0.48],
+    rock: ["rgb(74,26,62)", "rgb(14,6,24)"], haze: ["rgba(6,14,60,.35)", "rgba(2,4,20,.45)"],
+  },
+  light: {
+    shadow: "rgba(10,80,130,.3)", starShadow: "rgba(10,80,130,.3)", tint: "150,215,240",
+    snow: "255,255,255", snowAlpha: [0.3, 0.5, 0.75],
+    rock: ["rgb(200,160,176)", "rgb(120,96,128)"], haze: ["rgba(150,215,240,.12)", "rgba(60,150,190,.2)"],
+  },
+};
+
+export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
+  let pal = PALETTES[theme] || PALETTES.dark;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   const isUI = (el) => el.closest("button,a,summary,.view--sheet,.dock,.goal,.home-inner,.brand");
 
@@ -244,7 +260,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     const last = P[n - 1];
     const gr = g.createLinearGradient(P[0].x, P[0].y, last.x, last.y);
     gr.addColorStop(0, sp.body[0]); gr.addColorStop(0.45, sp.body[1]); gr.addColorStop(1, sp.body[2]);
-    g.shadowColor = "rgba(2,0,40,.5)";
+    g.shadowColor = pal.shadow;
     g.shadowBlur = 28 * DPR * f.size;
     g.shadowOffsetX = 14 * DPR * f.size;
     g.shadowOffsetY = 24 * DPR * f.size;
@@ -572,7 +588,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
         sc.moveTo(x + r, y);
         sc.arc(x, y, r, 0, TAU);
       }
-      sc.fillStyle = `rgba(190,210,255,${[0.16, 0.3, 0.48][band]})`;
+      sc.fillStyle = `rgba(${pal.snow},${pal.snowAlpha[band]})`;
       sc.fill();
     }
   }
@@ -710,7 +726,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     }
     rc.lineTo(W, H); rc.closePath();
     const rg = rc.createLinearGradient(0, H - 12 * u, 0, H);
-    rg.addColorStop(0, "rgb(74,26,62)"); rg.addColorStop(1, "rgb(14,6,24)");
+    rg.addColorStop(0, pal.rock[0]); rg.addColorStop(1, pal.rock[1]);
     rc.fillStyle = rg; rc.fill();
 
     fingers(W * 0.03, B - 2 * u, 18 * u, 1.6 * u, 3);
@@ -730,7 +746,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     // Voile d'eau : le récif se fond dans la profondeur.
     rc.globalCompositeOperation = "source-atop";
     const hz = rc.createLinearGradient(0, H - 35 * u, 0, H);
-    hz.addColorStop(0, "rgba(6,14,60,.35)"); hz.addColorStop(1, "rgba(2,4,20,.45)");
+    hz.addColorStop(0, pal.haze[0]); hz.addColorStop(1, pal.haze[1]);
     rc.fillStyle = hz; rc.fillRect(0, 0, W, H);
     rc.globalCompositeOperation = "source-over";
   }
@@ -795,7 +811,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     g.closePath();
     const gr = g.createRadialGradient(0, 0, R * 0.05, 0, 0, R);
     gr.addColorStop(0, "rgb(150,58,112)"); gr.addColorStop(0.35, "rgb(232,112,64)"); gr.addColorStop(1, "rgb(255,196,140)");
-    g.shadowColor = "rgba(0,0,20,.55)"; g.shadowBlur = R * 0.4 * DPR; g.shadowOffsetX = R * 0.12 * DPR; g.shadowOffsetY = R * 0.18 * DPR;
+    g.shadowColor = pal.starShadow; g.shadowBlur = R * 0.4 * DPR; g.shadowOffsetX = R * 0.12 * DPR; g.shadowOffsetY = R * 0.18 * DPR;
     g.fillStyle = gr; g.fill();
     noShadow();
     g.save();
@@ -1136,7 +1152,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     for (const j of jellies) {
       drawJelly(j, t);
       g.globalCompositeOperation = "source-atop";
-      g.fillStyle = `rgba(4,10,48,${j.depth})`;
+      g.fillStyle = `rgba(${pal.tint},${j.depth})`;
       g.fillRect(0, 0, W, H);
       g.globalCompositeOperation = "source-over";
     }
@@ -1145,7 +1161,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
       if (!f.depth) continue;
       drawFish(f, t);
       g.globalCompositeOperation = "source-atop";
-      g.fillStyle = `rgba(4,10,48,${f.depth})`;
+      g.fillStyle = `rgba(${pal.tint},${f.depth})`;
       g.fillRect(0, 0, W, H);
       g.globalCompositeOperation = "source-over";
     }
@@ -1211,12 +1227,21 @@ export function createOcean({ pond, sea, getAvoidRect }) {
   document.addEventListener("pointerdown", onPointerDown);
   reduce.addEventListener("change", start);
 
-  return () => {
+  // Change de thème : le récif est redessiné avec la nouvelle palette (le reste suit à l'image suivante).
+  function setTheme(name) {
+    pal = PALETTES[name] || PALETTES.dark;
+    buildReef();
+    if (reduce.matches) { render(0); drawSea(0, 0); }
+  }
+
+  function stop() {
     cancelAnimationFrame(raf);
     removeEventListener("resize", resize);
     removeEventListener("pointermove", onPointerMove);
     document.removeEventListener("pointerleave", onPointerLeave);
     document.removeEventListener("pointerdown", onPointerDown);
     reduce.removeEventListener("change", start);
-  };
+  }
+
+  return { setTheme, stop };
 }
