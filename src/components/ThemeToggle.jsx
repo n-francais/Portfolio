@@ -4,7 +4,7 @@ export default function ThemeToggle({ theme, onToggle }) {
   return (
     <button
       type="button"
-      className="theme-toggle"
+      className="round-btn theme-toggle"
       onClick={onToggle}
       aria-label={toLight ? "Remonter à la surface (thème clair)" : "Plonger dans les profondeurs (thème sombre)"}
       title={toLight ? "Thème clair" : "Thème sombre"}

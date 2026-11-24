@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Ocean from "./components/Ocean";
 import ThemeToggle from "./components/ThemeToggle";
+import AquariumToggle from "./components/AquariumToggle";
+import FoodGauge from "./components/FoodGauge";
 import ThemeTransition from "./components/ThemeTransition";
 import Home from "./components/Home";
 import About from "./components/About";
@@ -28,6 +30,9 @@ function App() {
   const hash = useHashRoute();
   const [theme, toggleTheme, fx] = useTheme();
   const view = TABS.some((t) => t.id === hash) ? hash : "accueil";
+  // Mode aquarium : le texte est masqué, on ne voit que les poissons, que l'on peut nourrir.
+  const [aquarium, setAquarium] = useState(false);
+  const gaugeRef = useRef(null);
   const homeRef = useRef(null);
   const panelRefs = useRef({});
   const tabRefs = useRef({});
@@ -41,18 +46,20 @@ function App() {
 
   useEffect(() => {
     const onKeyDown = (e) => {
-      if (e.key === "Escape" && window.location.hash.slice(1) !== "accueil") go("accueil");
+      if (e.key !== "Escape") return;
+      if (aquarium) setAquarium(false);
+      else if (window.location.hash.slice(1) !== "accueil") go("accueil");
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [aquarium]);
 
   // Sur l'accueil, les poissons contournent le bloc de texte (sauf sur petit écran, où il couvre tout).
   const getAvoidRect = useCallback(() => {
-    if (view !== "accueil") return null;
+    if (aquarium || view !== "accueil") return null;
     const r = homeRef.current?.getBoundingClientRect();
     return r && r.width < window.innerWidth * 0.7 ? r : null;
-  }, [view]);
+  }, [view, aquarium]);
 
   const onDockKey = (e) => {
     const i = TABS.findIndex((t) => t.id === view);
@@ -64,16 +71,20 @@ function App() {
   };
 
   return (
-    <div className="app" data-view={view}>
-      <Ocean getAvoidRect={getAvoidRect} theme={theme} fx={fx} />
-      <ThemeToggle theme={theme} onToggle={toggleTheme} />
+    <div className="app" data-view={view} data-aquarium={aquarium ? "" : undefined}>
+      <Ocean getAvoidRect={getAvoidRect} theme={theme} fx={fx} aquarium={aquarium} gaugeRef={gaugeRef} />
+      <div className="controls">
+        <AquariumToggle active={aquarium} onToggle={() => setAquarium((on) => !on)} />
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      </div>
+      <FoodGauge ref={gaugeRef} />
       <ThemeTransition fx={fx} />
 
       <a className="brand" href="#accueil" aria-label="Nina Français, retour à l'accueil">
         Nina Français
       </a>
 
-      <main className="stage">
+      <main className="stage" inert={aquarium ? "" : undefined}>
         {TABS.map(({ id, Panel }) => {
           const active = id === view;
           return (
@@ -94,7 +105,7 @@ function App() {
         })}
       </main>
 
-      <nav className="dock" role="tablist" aria-label="Sections du portfolio" onKeyDown={onDockKey}>
+      <nav className="dock" role="tablist" aria-label="Sections du portfolio" onKeyDown={onDockKey} inert={aquarium ? "" : undefined}>
         {TABS.map(({ id, label }) => (
           <button
             key={id}

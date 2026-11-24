@@ -8,7 +8,7 @@ const SUN_X = 68; // le soleil, en thème clair
 // Sombre : rayons presque verticaux. Clair : ils partent du soleil en éventail.
 const tilt = (x) => ({ dark: (x - 50) * 0.3, light: (SUN_X - x) * 0.25 });
 
-export default function Ocean({ getAvoidRect, theme, fx }) {
+export default function Ocean({ getAvoidRect, theme, fx, aquarium, gaugeRef }) {
   const pondRef = useRef(null);
   const seaRef = useRef(null);
   const engineRef = useRef(null);
@@ -16,6 +16,8 @@ export default function Ocean({ getAvoidRect, theme, fx }) {
   avoidRef.current = getAvoidRect;
   const themeRef = useRef(theme);
   themeRef.current = theme;
+  const aquariumRef = useRef(aquarium);
+  aquariumRef.current = aquarium;
 
   const bubbles = useMemo(() => {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) return [];
@@ -34,6 +36,8 @@ export default function Ocean({ getAvoidRect, theme, fx }) {
       sea: seaRef.current,
       getAvoidRect: () => avoidRef.current(),
       theme: themeRef.current,
+      gauge: gaugeRef.current,
+      feeding: aquariumRef.current,
     });
     engineRef.current = engine;
     return engine.stop;
@@ -42,6 +46,11 @@ export default function Ocean({ getAvoidRect, theme, fx }) {
   useEffect(() => {
     engineRef.current?.setTheme(theme);
   }, [theme]);
+
+  // La nourriture ne se distribue qu'en mode aquarium.
+  useEffect(() => {
+    engineRef.current?.setFeeding(aquarium);
+  }, [aquarium]);
 
   // Pendant la transition, les créatures nagent vers la lumière ou plongent.
   useEffect(() => {
