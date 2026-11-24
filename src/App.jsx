@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import Ocean from "./components/Ocean";
+import ThemeToggle from "./components/ThemeToggle";
+import ThemeTransition from "./components/ThemeTransition";
 import Home from "./components/Home";
 import About from "./components/About";
 import Projects from "./components/Projects";
@@ -8,6 +10,7 @@ import Parcours from "./components/Parcours";
 import HorsCode from "./components/HorsCode";
 import Contact from "./components/Contact";
 import useHashRoute from "./hooks/useHashRoute";
+import useTheme from "./hooks/useTheme";
 
 const TABS = [
   { id: "accueil", label: "Accueil" },
@@ -23,6 +26,7 @@ const go = (id) => { window.location.hash = id; };
 
 function App() {
   const hash = useHashRoute();
+  const [theme, toggleTheme, fx] = useTheme();
   const view = TABS.some((t) => t.id === hash) ? hash : "accueil";
   const homeRef = useRef(null);
   const panelRefs = useRef({});
@@ -61,7 +65,9 @@ function App() {
 
   return (
     <div className="app" data-view={view}>
-      <Ocean getAvoidRect={getAvoidRect} />
+      <Ocean getAvoidRect={getAvoidRect} theme={theme} fx={fx} />
+      <ThemeToggle theme={theme} onToggle={toggleTheme} />
+      <ThemeTransition fx={fx} />
 
       <a className="brand" href="#accueil" aria-label="Nina Français, retour à l'accueil">
         Nina Français

@@ -1,9 +1,27 @@
 /* Le bassin du portfolio : poissons, méduses, pieuvre, étoiles de mer et récif, dessinés et animés
    en canvas. `pond` reçoit les créatures, `sea` le récif et la neige marine. `getAvoidRect` renvoie la
-   zone de texte que les poissons contournent (ou null). Renvoie une fonction qui arrête tout. */
+   zone de texte que les poissons contournent (ou null). Renvoie `{ setTheme, stop }`. */
 import { SPECIES, FISH, JELLY, FANS, STARS } from "./species";
 
-export function createOcean({ pond, sea, getAvoidRect }) {
+// Couleurs qui changent avec le thème : en sombre, les profondeurs ; en clair, l'eau près de la surface.
+// Les créatures et le récif sont rendus plus pastel côté CSS (filtre sur les canvas).
+const PALETTES = {
+  dark: {
+    shadow: "rgba(2,0,40,.5)", starShadow: "rgba(0,0,20,.55)", tint: "4,10,48",
+    snow: "190,210,255", snowAlpha: [0.16, 0.3, 0.48],
+    rock: ["rgb(74,26,62)", "rgb(14,6,24)"], haze: ["rgba(6,14,60,.35)", "rgba(2,4,20,.45)"],
+  },
+  light: {
+    shadow: "rgba(10,80,130,.3)", starShadow: "rgba(10,80,130,.3)", tint: "150,215,240",
+    snow: "255,255,255", snowAlpha: [0.3, 0.5, 0.75],
+    rock: ["rgb(200,160,176)", "rgb(120,96,128)"], haze: ["rgba(150,215,240,.12)", "rgba(60,150,190,.2)"],
+  },
+};
+
+export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
+  let pal = PALETTES[theme] || PALETTES.dark;
+  // Pendant le changement de thème, tout le monde nage vers la lumière (-1) ou plonge dans les profondeurs (1).
+  let rush = null;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
   const isUI = (el) => el.closest("button,a,summary,.view--sheet,.dock,.goal,.home-inner,.brand");
 
@@ -244,7 +262,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     const last = P[n - 1];
     const gr = g.createLinearGradient(P[0].x, P[0].y, last.x, last.y);
     gr.addColorStop(0, sp.body[0]); gr.addColorStop(0.45, sp.body[1]); gr.addColorStop(1, sp.body[2]);
-    g.shadowColor = "rgba(2,0,40,.5)";
+    g.shadowColor = pal.shadow;
     g.shadowBlur = 28 * DPR * f.size;
     g.shadowOffsetX = 14 * DPR * f.size;
     g.shadowOffsetY = 24 * DPR * f.size;
@@ -417,6 +435,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
 
   function updateJelly(j, dt, t) {
     j.startle = Math.max(0, j.startle - dt);
+    if (rush) { j.startle = Math.max(j.startle, 0.4); j.vy += rush.dir * j.R * 5 * dt; }
     j.phase += dt * TAU * (j.startle > 0 ? 0.9 : 0.42);
     const { p } = bellShape(j);
     // Poussée pendant la contraction, puis lente redescente.
@@ -572,7 +591,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
         sc.moveTo(x + r, y);
         sc.arc(x, y, r, 0, TAU);
       }
-      sc.fillStyle = `rgba(190,210,255,${[0.16, 0.3, 0.48][band]})`;
+      sc.fillStyle = `rgba(${pal.snow},${pal.snowAlpha[band]})`;
       sc.fill();
     }
   }
@@ -710,7 +729,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     }
     rc.lineTo(W, H); rc.closePath();
     const rg = rc.createLinearGradient(0, H - 12 * u, 0, H);
-    rg.addColorStop(0, "rgb(74,26,62)"); rg.addColorStop(1, "rgb(14,6,24)");
+    rg.addColorStop(0, pal.rock[0]); rg.addColorStop(1, pal.rock[1]);
     rc.fillStyle = rg; rc.fill();
 
     fingers(W * 0.03, B - 2 * u, 18 * u, 1.6 * u, 3);
@@ -730,7 +749,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     // Voile d'eau : le récif se fond dans la profondeur.
     rc.globalCompositeOperation = "source-atop";
     const hz = rc.createLinearGradient(0, H - 35 * u, 0, H);
-    hz.addColorStop(0, "rgba(6,14,60,.35)"); hz.addColorStop(1, "rgba(2,4,20,.45)");
+    hz.addColorStop(0, pal.haze[0]); hz.addColorStop(1, pal.haze[1]);
     rc.fillStyle = hz; rc.fillRect(0, 0, W, H);
     rc.globalCompositeOperation = "source-over";
   }
@@ -795,7 +814,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     g.closePath();
     const gr = g.createRadialGradient(0, 0, R * 0.05, 0, 0, R);
     gr.addColorStop(0, "rgb(150,58,112)"); gr.addColorStop(0.35, "rgb(232,112,64)"); gr.addColorStop(1, "rgb(255,196,140)");
-    g.shadowColor = "rgba(0,0,20,.55)"; g.shadowBlur = R * 0.4 * DPR; g.shadowOffsetX = R * 0.12 * DPR; g.shadowOffsetY = R * 0.18 * DPR;
+    g.shadowColor = pal.starShadow; g.shadowBlur = R * 0.4 * DPR; g.shadowOffsetX = R * 0.12 * DPR; g.shadowOffsetY = R * 0.18 * DPR;
     g.fillStyle = gr; g.fill();
     noShadow();
     g.save();
@@ -864,6 +883,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
   function updateOcto(dt, t) {
     const o = octo, R = o.R;
     o.startle = Math.max(0, o.startle - dt);
+    if (rush) { o.startle = Math.max(o.startle, 0.4); o.vy += rush.dir * o.R * 6 * dt; }
     o.phase += dt * TAU * (o.startle > 0 ? 0.9 : 0.33);
     const jet = Math.max(0, Math.sin(o.phase)) ** 3;
     // Direction : errance, bords (elle peut sortir puis revient), texte de l'accueil, curseur.
@@ -1045,6 +1065,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     const edge = (d, lim) => (d < lim ? Math.min(2, (lim - d) / lim) : 0);
     let ax = edge(f.hx + B, m) - edge(W + B - f.hx, m);
     let ay = edge(f.hy + B, m) - edge(H + B - f.hy, m);
+    if (rush) { ay += rush.dir * 2.6; ax *= 0.4; }
 
     if (keepOut) {
       const cx = Math.max(keepOut.l, Math.min(f.hx, keepOut.r)), cy = Math.max(keepOut.t, Math.min(f.hy, keepOut.b));
@@ -1085,7 +1106,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     }
     f.h = wrap(f.h + turn * dt);
 
-    const target = 1 + fleeing * 1.8 + (f.food ? 0.6 : 0);
+    const target = 1 + fleeing * 1.8 + (f.food ? 0.6 : 0) + (rush ? 1.2 : 0);
     f.boost += (target - f.boost) * Math.min(1, dt * 2.5);
     // Nage par à-coups : quelques battements de queue, puis une glissade.
     const c = 0.5 + 0.5 * Math.sin(t * (0.45 + f.f2) + f.s2);
@@ -1136,7 +1157,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     for (const j of jellies) {
       drawJelly(j, t);
       g.globalCompositeOperation = "source-atop";
-      g.fillStyle = `rgba(4,10,48,${j.depth})`;
+      g.fillStyle = `rgba(${pal.tint},${j.depth})`;
       g.fillRect(0, 0, W, H);
       g.globalCompositeOperation = "source-over";
     }
@@ -1145,7 +1166,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
       if (!f.depth) continue;
       drawFish(f, t);
       g.globalCompositeOperation = "source-atop";
-      g.fillStyle = `rgba(4,10,48,${f.depth})`;
+      g.fillStyle = `rgba(${pal.tint},${f.depth})`;
       g.fillRect(0, 0, W, H);
       g.globalCompositeOperation = "source-over";
     }
@@ -1186,6 +1207,7 @@ export function createOcean({ pond, sea, getAvoidRect }) {
     // La zone de texte bouge avec l'onglet et le défilement : on la relit régulièrement.
     if ((sinceAvoid += dt) > 0.3) { sinceAvoid = 0; updateKeepOut(); }
     ptr.speed *= Math.exp(-dt * 5);
+    if (rush && (rush.left -= dt) <= 0) rush = null;
     feed(dt);
     for (const f of fishes) steer(f, dt, t);
     for (const j of jellies) updateJelly(j, dt, t);
@@ -1211,12 +1233,26 @@ export function createOcean({ pond, sea, getAvoidRect }) {
   document.addEventListener("pointerdown", onPointerDown);
   reduce.addEventListener("change", start);
 
-  return () => {
+  // Change de thème : le récif est redessiné avec la nouvelle palette (le reste suit à l'image suivante).
+  function setTheme(name) {
+    pal = PALETTES[name] || PALETTES.dark;
+    buildReef();
+    if (reduce.matches) { render(0); drawSea(0, 0); }
+  }
+
+  // Lance la ruée : `up` pour remonter vers la surface, `down` pour plonger.
+  function rushTo(dir) {
+    rush = { dir: dir === "up" ? -1 : 1, left: 1.7 };
+  }
+
+  function stop() {
     cancelAnimationFrame(raf);
     removeEventListener("resize", resize);
     removeEventListener("pointermove", onPointerMove);
     document.removeEventListener("pointerleave", onPointerLeave);
     document.removeEventListener("pointerdown", onPointerDown);
     reduce.removeEventListener("change", start);
-  };
+  }
+
+  return { setTheme, rushTo, stop };
 }
