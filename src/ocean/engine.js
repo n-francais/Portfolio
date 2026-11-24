@@ -1,6 +1,7 @@
 /* Le bassin du portfolio : poissons, méduses, pieuvre, étoiles de mer et récif, dessinés et animés
    en canvas. `pond` reçoit les créatures, `sea` le récif et la neige marine. `getAvoidRect` renvoie la
-   zone de texte que les poissons contournent (ou null). Renvoie `{ setTheme, stop }`. */
+   zone de texte que les poissons contournent (ou null). `gauge` est l'élément de la jauge de nourriture
+   (en mode aquarium). Renvoie `{ setTheme, setFeeding, rushTo, stop }`. */
 import { SPECIES, FISH, JELLY, FANS, STARS } from "./species";
 
 // Couleurs qui changent avec le thème : en sombre, les profondeurs ; en clair, l'eau près de la surface.
@@ -18,12 +19,12 @@ const PALETTES = {
   },
 };
 
-export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
+export function createOcean({ pond, sea, getAvoidRect, gauge, theme = "dark", feeding: feedingOn = false }) {
   let pal = PALETTES[theme] || PALETTES.dark;
   // Pendant le changement de thème, tout le monde nage vers la lumière (-1) ou plonge dans les profondeurs (1).
   let rush = null;
   const reduce = matchMedia("(prefers-reduced-motion: reduce)");
-  const isUI = (el) => el.closest("button,a,summary,.view--sheet,.dock,.goal,.home-inner,.brand");
+  const isUI = (el) => !!el.closest?.("button,a,summary,.view--sheet,.dock,.goal,.home-inner,.brand,.food");
 
   /* ---------- Le bassin : poissons dessinés et animés en canvas ----------
      Chaque poisson a une colonne vertébrale articulée qui suit la tête, une onde de nage qui
@@ -1045,10 +1046,41 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
   const onPointerLeave = () => { ptr.x = ptr.y = -1e4; ptr.t = 0; };
 
   const foods = [], rings = [], ripples = [];
+
+  /* --- Jauge de nourriture : chaque clic en dépense une, elle se recharge toute seule --- */
+  const FOOD_MAX = 10, FOOD_REFILL_S = 1.4, PINCH = 3;
+  let feeding = feedingOn, stock = FOOD_MAX;
+  const countEl = gauge?.querySelector("[data-food-count]");
+  function paintGauge() {
+    if (!gauge) return;
+    gauge.style.setProperty("--food", (stock / FOOD_MAX).toFixed(3));
+    const n = Math.floor(stock);
+    if (gauge.dataset.n !== String(n)) {
+      gauge.dataset.n = n;
+      gauge.toggleAttribute("data-empty", n < 1);
+      gauge.setAttribute("aria-valuenow", n);
+      if (countEl) countEl.textContent = n;
+    }
+  }
+  function shakeGauge() {
+    if (!gauge) return;
+    gauge.classList.remove("is-shaking");
+    void gauge.offsetWidth; // relance l'animation
+    gauge.classList.add("is-shaking");
+  }
+
   const onPointerDown = (e) => {
     if (reduce.matches || isUI(e.target)) return;
     if (ripples.length < 8) ripples.push({ x: e.clientX, y: e.clientY, age: 0 });
-    if (foods.length < 6) foods.push({ x: e.clientX, y: e.clientY, age: 0, s: Math.random() * 9 });
+    if (!feeding) return;
+    // Une pincée de granulés par clic, tant qu'il reste de la nourriture.
+    if (stock < 1) { shakeGauge(); return; }
+    stock -= 1;
+    paintGauge();
+    for (let i = 0; i < PINCH; i++) {
+      if (foods.length >= 24) break;
+      foods.push({ x: e.clientX + (Math.random() - 0.5) * 36, y: e.clientY + (Math.random() - 0.5) * 20, age: 0, s: Math.random() * 9 });
+    }
   };
 
   // Zone de texte que les poissons contournent (fournie par l'application, ou null).
@@ -1208,6 +1240,7 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
     if ((sinceAvoid += dt) > 0.3) { sinceAvoid = 0; updateKeepOut(); }
     ptr.speed *= Math.exp(-dt * 5);
     if (rush && (rush.left -= dt) <= 0) rush = null;
+    if (stock < FOOD_MAX) { stock = Math.min(FOOD_MAX, stock + dt / FOOD_REFILL_S); paintGauge(); }
     feed(dt);
     for (const f of fishes) steer(f, dt, t);
     for (const j of jellies) updateJelly(j, dt, t);
@@ -1240,6 +1273,11 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
     if (reduce.matches) { render(0); drawSea(0, 0); }
   }
 
+  // Le mode aquarium active la distribution de nourriture ; hors de ce mode, un clic fait seulement des ondes.
+  function setFeeding(on) {
+    feeding = on;
+  }
+
   // Lance la ruée : `up` pour remonter vers la surface, `down` pour plonger.
   function rushTo(dir) {
     rush = { dir: dir === "up" ? -1 : 1, left: 1.7 };
@@ -1254,5 +1292,6 @@ export function createOcean({ pond, sea, getAvoidRect, theme = "dark" }) {
     reduce.removeEventListener("change", start);
   }
 
-  return { setTheme, rushTo, stop };
+  paintGauge();
+  return { setTheme, setFeeding, rushTo, stop };
 }
